@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<flow name="ErrorHandlerHttp" doc:id="21ef7023-80aa-4e1d-8a44-0d3f1369e543" >
+		<json-logger:logger doc:name="Debug Logger" doc:id="4d149476-0b45-4ecd-ba8e-cc2354f92500" config-ref="JSON_Logger_Config" message="In ErrorHandlerHttp Debug" tracePoint="EXCEPTION" priority="DEBUG"/>
+		<choice doc:name="Override Standard Http Error Handler?" doc:id="c25f20cd-4c46-48ed-a954-dadc11fa8b1e" >
+			<when expression="#[error.errorMessage.payload.errorCode != null]">
+				<json-logger:logger doc:name="Debug Logger" doc:id="43dad248-a86d-41b6-a54a-13c2508ee9d7" message="Propagating Error" tracePoint="EXCEPTION" priority="DEBUG" config-ref="JSON_Logger_Config"/>
+				<ee:transform doc:name="Transform Message" doc:id="8c8d4dbb-138f-4ff8-b368-2df52c75fbce">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+error.errorMessage.payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<when expression="#[Mule::p('errors.override.http') == 'true']">
+				<ee:transform doc:name="Call custom http error handler" doc:id="c191a123-2547-48a5-9542-226c5d49f465">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('CustomHttpErrorHandler', {})]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Set error variables" doc:id="f07b2b16-686d-4e2e-9ef2-a02b9781bb71" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+var response = Mule::p('errors.response.http.' ++ error.errorType.identifier)
+---
+if (response != null)
+	read(response as String, 'application/json')
+else	
+	read(Mule::p('errors.response.http.DEFAULT') as String, 'application/json')
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<choice doc:name="Extend Standard Http Error Handler?" doc:id="67e2b3be-3a10-4dd1-ab5a-0997b41142e5" >
+					<when expression="#[Mule::p('errors.extend.http') == 'true']">
+						<ee:transform doc:name="Invoke extension" doc:id="377bc582-17c5-4754-a2f8-be2baa3b6e14" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('ExtendHttpErrorHandler', payload)
+]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</when>
+					<otherwise>
+						<json-logger:logger doc:name="Debug Logger" doc:id="31814848-3a57-4869-a775-7226db11036c" config-ref="JSON_Logger_Config" message="Default http error" tracePoint="EXCEPTION" priority="DEBUG"/>
+					</otherwise>
+				</choice>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

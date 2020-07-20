@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<flow name="ErrorHandlerRestValidator" doc:id="41b30ea8-6c38-4999-9672-121cb0ff5537" >
+		<json-logger:logger doc:name="Debug Logger" doc:id="433a154c-43ef-4c38-b13f-436ce4dd6939" config-ref="JSON_Logger_Config" message="In ErrorHandlerRestValidator" tracePoint="EXCEPTION" priority="DEBUG"/>
+		<choice doc:name="Override RestValidator Error Handler?" doc:id="c90bec94-5207-4840-b387-ee22763f8fb7" >
+			<when expression="#[Mule::p('errors.override.restvalidator') == 'true']">
+				<ee:transform doc:name="Call custom RestValidator error handler" doc:id="c20c4675-2526-485f-baf9-913d04478260" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('CustomRestValidatorErrorHandler', {})]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Set error variables" doc:id="3aebd688-7916-4fb4-b6fe-3fcb6a314aad">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+var response = Mule::p('errors.response.restvalidator.' ++ error.errorType.identifier)
+---
+if (response != null)
+	read(response as String, 'application/json')
+else	
+	read(Mule::p('errors.response.restvalidator.DEFAULT') as String, 'application/json')
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<choice doc:name="Extend Standard RestValidator Error Handler?" doc:id="40db151c-1b18-4566-b431-84fd59bc54ee" >
+					<when expression="#[Mule::p('errors.extend.restvalidator') == 'true']">
+						<ee:transform doc:name="Invoke extension" doc:id="24d39d6d-8745-4d8f-9518-05e4577aebff" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('ExtendRestValidatorErrorHandler', payload)]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</when>
+					<otherwise >
+						<json-logger:logger doc:name="Debug Logger" doc:id="379f4a72-0caf-41dc-bef3-22eb3eab19ad" config-ref="JSON_Logger_Config" message="Default restvalidator error" tracePoint="EXCEPTION" priority="DEBUG"/>
+					</otherwise>
+				</choice>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<flow name="ErrorHandlerBusiness" doc:id="6c6fbf16-31da-44a1-a55e-e8645c766946" >
+		<json-logger:logger doc:name="Debug Logger" doc:id="b915c31a-96c0-4b9d-8729-ffa5c36f3614" config-ref="JSON_Logger_Config" tracePoint="EXCEPTION" priority="DEBUG" message="In ErrorHandlerBusiness"/>
+		<choice doc:name="Override Standard Business Error Handler?" doc:id="904a8884-a63c-4980-a7da-cacaba212393" >
+			<when expression="#[Mule::p('errors.override.business') == 'true']">
+				<ee:transform doc:name="Call custom business error handler" doc:id="fd4e5e97-6243-4d39-b4fb-d692a9aee663" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('CustomBusinessErrorHandler', {})]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Set error variables" doc:id="81825258-3bc5-4716-9716-a32ae05b47b5" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+var response = Mule::p('errors.response.business.' ++ error.errorType.identifier)
+---
+if (response != null)
+	read(response as String, 'application/json')
+else	
+	read(Mule::p('errors.response.business.DEFAULT') as String, 'application/json')
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<choice doc:name="Extend Standard Business Error Handler?" doc:id="490204d7-ce86-4131-9b2e-6f5df3d97ae7" >
+					<when expression="#[Mule::p('errors.extend.business') == 'true']">
+						<ee:transform doc:name="Invoke extension" doc:id="581c1c6c-dbb4-4341-bd6f-c83f2dc660d5" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('ExtendBusinessErrorHandler', payload)
+]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</when>
+					<otherwise>
+						<json-logger:logger doc:name="Debug Logger" doc:id="81d33962-1867-44aa-891b-7c0328114cce" config-ref="JSON_Logger_Config" tracePoint="EXCEPTION" priority="DEBUG" message="Default business error"/>
+					</otherwise>
+				</choice>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>
