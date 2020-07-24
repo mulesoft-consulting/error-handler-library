@@ -58,6 +58,7 @@
 			<version>2.0.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
+		<!-- *************************************************** -->
 		<dependency>
 			<groupId>org.mule.connectors</groupId>
 			<artifactId>mule-jms-connector</artifactId>
@@ -82,15 +83,16 @@
 		
 		<!-- TODO: Replace repository with your artifact repo details. -->
 		<repository>
-            <id>feed123</id>
-            <url>https://pkgs.dev.azure.com/Org123/_packaging/feed123/maven/v1</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+			<id>mulesoft-consulting</id>
+			<url>https://pkgs.dev.azure.com/mulesoft-consulting/_packaging/mulesoft-consulting/maven/v1</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
+		<!-- *************************************************** -->
 		
 	</repositories>
 	
@@ -109,14 +111,15 @@
 	<!-- TODO: Replace repository with your artifact repo details. -->
 	<distributionManagement>
 		<repository>
-            <id>feed123</id>
-            <url>https://pkgs.dev.azure.com/Org123/_packaging/feed123/maven/v1</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+			<id>mulesoft-consulting</id>
+			<url>https://pkgs.dev.azure.com/mulesoft-consulting/_packaging/mulesoft-consulting/maven/v1</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</distributionManagement>
+	<!-- *************************************************** -->
 </project>
