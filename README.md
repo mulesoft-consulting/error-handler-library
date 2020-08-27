@@ -3,11 +3,6 @@ An advanced mule 4 error handler library with handler overriding and extension
 
 Design document: https://wiki.corp.mulesoft.com/display/OBD/Error+Handler+Library
 
-- Step 1: Publish this library to your/customer artifact repo (Nexus, artefactory, azure repo etc)
-- Step 2: Add it to the Mule project and execute command `mvn generate-sources` (See [mule4-rest-api-template][3] project example)
-- Step 3: Test
-
-
 # Getting Started
 As per Organization needs, modify error handler library by
 - Add new error types
@@ -17,7 +12,8 @@ As per Organization needs, modify error handler library by
 ### Steps:
 1. Clone the repository
 2. Update library as required
-3. Run ```mvn deploy``` from project root folder. This will deploy the library to Exchange. 
+3. Run ```mvn deploy``` from project root folder to Publish this library to your/customer artifact repo (Nexus, artefactory, azure repo etc). 
+_You can publish to Exchange with the current configuration(Just need to update the project.groupId )_
 
 (Make sure you have appropriate credentials configured in `settings.xml` file in local `.m2` folder.
 
@@ -88,7 +84,7 @@ As per Organization needs, modify error handler library by
 4. Go to Project root folder and execute `mvn clean install` . This should pull the library files from Exchange or Artefact repo.  
 5. Configure properties file (Please take this configuration for [reference][2]. This file is only for reference and won't be part of library in the API)
 6. Make sure to configure http-listener response accordingly.(Please take this configuration for ([reference][2] This file is only for reference and won't be part of library in the API)
-7. `error-mainErrorHandlerFlow` is the main error handler flow. So add flow reference to `error-mainErrorHandlerFlow` in `On Error Propagate` or `On Error Continue` to initiate the error handler libary logic. ([reference][2]. This file is only for reference and won't be part of library in the API)
+7. Add flow reference to `error-mainErrorHandlerFlow` in `On Error Propagate` or `On Error Continue` to initiate the error handler libary logic. ([reference][2]. This file is only for reference and won't be part of library in the API)
 
 
 Please refer this [sample project][3] for more info
