@@ -4,7 +4,7 @@
 
 	<groupId>com.mulesoft</groupId>
 	<artifactId>error-handler-library</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>mule-application</packaging>
 
 	<name>error-handler-library</name>
@@ -50,12 +50,12 @@
 			<version>1.6.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
-		
-		<!-- TODO: Replace this dependency with your JSON logger -->
+
+		<!-- This dependency is pulled from Exchange asset - JSON logger -->
 		<dependency>
-			<groupId>9603fc66-9985-4754-8a84-6dfcfc3b2d72</groupId>
+			<groupId>b144f004-790a-4e9b-8ff3-61a28db48356</groupId>
 			<artifactId>json-logger</artifactId>
-			<version>2.0.0</version>
+			<version>2.0.1</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
 		<!-- *************************************************** -->
@@ -80,22 +80,19 @@
 			<url>https://repository.mulesoft.org/releases/</url>
 			<layout>default</layout>
 		</repository>
-		
-		<!-- TODO: Replace repository with your artifact repo details. -->
-		<repository>
-			<id>mulesoft-consulting</id>
-			<url>https://pkgs.dev.azure.com/mulesoft-consulting/_packaging/mulesoft-consulting/maven/v1</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
+
+		<!-- TODO: Replace repository with your artifact repo details.
+		With this configurations can be published to Exchange. Please Add appropriate ${project.groupId} -->
+        <repository>
+            <id>Exchange2</id>
+            <name>Exchange2 Repository</name>
+            <url>https://maven.anypoint.mulesoft.com/api/v2/organizations/${project.groupId}/maven</url>
+            <layout>default</layout>
+        </repository>
 		<!-- *************************************************** -->
-		
+
 	</repositories>
-	
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>mulesoft-releases</id>
@@ -107,19 +104,15 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-
-	<!-- TODO: Replace repository with your artifact repo details. -->
-	<distributionManagement>
-		<repository>
-			<id>mulesoft-consulting</id>
-			<url>https://pkgs.dev.azure.com/mulesoft-consulting/_packaging/mulesoft-consulting/maven/v1</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</distributionManagement>
-	<!-- *************************************************** -->
+	
+	    <distributionManagement>
+		<!-- TODO: Replace repository with your artifact repo details.
+		With this configurations can be published to Exchange. Please Add appropriate ${project.groupId} -->
+        <repository>
+            <id>Exchange2</id>
+            <name>Exchange2 Repository</name>
+            <url>https://maven.anypoint.mulesoft.com/api/v2/organizations/${project.groupId}/maven</url>
+            <layout>default</layout>
+        </repository>
+    </distributionManagement>
 </project>

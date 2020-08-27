@@ -15,7 +15,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		<json-logger:logger doc:name="Logger" doc:id="5a81f09e-36e3-4a70-ac7c-2f104f7723d8" config-ref="JSON_Logger_Config" message="In error-handler-before-errorTypeFlow" tracePoint="EXCEPTION">
 			<json-logger:content ><![CDATA[#[import modules::JSONLoggerModule output application/json ---
 {
-    payload: JSONLoggerModule::stringifyNonJSON(error) 
+    payload: JSONLoggerModule::stringifyNonJSON(payload) 
 }]]]></json-logger:content>
 		</json-logger:logger>
 		<ee:transform doc:name="Set generic variables" doc:id="0da75b11-3197-4730-baa8-6a63019ac428">
