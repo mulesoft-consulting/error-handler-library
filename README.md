@@ -13,7 +13,8 @@ As per Organization needs, modify error handler library by
 1. Clone the repository
 2. Update library as required
 3. Run ```mvn deploy``` from project root folder to Publish this library to your/customer artifact repo (Nexus, artefactory, azure repo etc). 
-_You can publish to Exchange with the current configuration(Just need to update the project.groupId )_
+
+_This can be published to Exchange by updating the project.groupId. Best practice would be to use artefact repo_
 
 (Make sure you have appropriate credentials configured in `settings.xml` file in local `.m2` folder.
 
