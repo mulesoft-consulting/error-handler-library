@@ -1,5 +1,5 @@
 # error-handler-library
-An advanced mule 4 error handler library with handler overriding and extension
+An advanced mule 4 error handler library with handler overriding and extension. Not to be confused with error handler plugin. This is a comprehensive library to handle different types of errors (your could update the framework to send cloudhub notifications, create service now tickets, write to MQ, BD etc per error type)
 
 Design document: https://wiki.corp.mulesoft.com/display/OBD/Error+Handler+Library
 
