@@ -60,7 +60,7 @@ Mule::lookup(errorHandlerFlow, {})]]></ee:set-payload>
 	<sub-flow name="error-handler-after-errorTypeFlow" doc:id="14191836-1312-495d-9d16-81d2b291834f" >
 		<json-logger:logger doc:name="Debug Logger" doc:id="8721dd31-aaec-48c7-a42e-b17526ccab77" config-ref="JSON_Logger_Config" message="In error-handler-after-errorTypeFlow" tracePoint="EXCEPTION" priority="DEBUG"/>
 		<choice doc:name="Propagate error?" doc:id="ec89ab74-3d9c-4ec7-9f0e-097eba6d3d3b" >
-			<when expression="error.errorMessage.payload.errorCode != null">
+			<when expression="error.errorMessage.payload.status != null">
 				<ee:transform doc:name="Transform Message" doc:id="b425dc74-8396-4cdb-b412-374e01f439e0" >
 					<ee:message >
 					</ee:message>
@@ -68,7 +68,7 @@ Mule::lookup(errorHandlerFlow, {})]]></ee:set-payload>
 						<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
 output application/java
 ---
-error.errorMessage.payload.errorCode]]></ee:set-variable>
+error.errorMessage.payload.status]]></ee:set-variable>
 					</ee:variables>
 				</ee:transform>
 				<set-payload value="#[error.errorMessage.payload]" doc:name="Set Payload" doc:id="8dfbe8eb-2762-4fb7-90eb-385f6068006d" />

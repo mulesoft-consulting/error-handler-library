@@ -8,7 +8,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 	<flow name="ErrorHandlerHttp" doc:id="21ef7023-80aa-4e1d-8a44-0d3f1369e543" >
 		<json-logger:logger doc:name="Debug Logger" doc:id="4d149476-0b45-4ecd-ba8e-cc2354f92500" config-ref="JSON_Logger_Config" message="In ErrorHandlerHttp Debug" tracePoint="EXCEPTION" priority="DEBUG"/>
 		<choice doc:name="Override Standard Http Error Handler?" doc:id="c25f20cd-4c46-48ed-a954-dadc11fa8b1e" >
-			<when expression="#[error.errorMessage.payload.errorCode != null]">
+			<when expression="#[error.errorMessage.payload.status != null]">
 				<json-logger:logger doc:name="Debug Logger" doc:id="43dad248-a86d-41b6-a54a-13c2508ee9d7" message="Propagating Error" tracePoint="EXCEPTION" priority="DEBUG" config-ref="JSON_Logger_Config"/>
 				<ee:transform doc:name="Transform Message" doc:id="8c8d4dbb-138f-4ff8-b368-2df52c75fbce">
 					<ee:message>
