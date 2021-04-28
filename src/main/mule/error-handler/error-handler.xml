@@ -53,7 +53,7 @@ var namespace = {
 
 var errorHandlerFlow = if (namespace[error.errorType.namespace] != null) namespace[error.errorType.namespace] else 'ErrorHandlerDefault' 
 ---
-Mule::lookup(errorHandlerFlow, {})]]></ee:set-payload>
+Mule::lookup(errorHandlerFlow, {}, 120000)]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</sub-flow>
@@ -114,6 +114,9 @@ output application/json
 ---
 
 {
+	Element: error.cause.info.Element,
+    ElementDSL: error.cause.info."Element DSL",
+    flowName: error.cause.info.FlowStack.elements.flowName,
 	status: vars.httpStatus,
 	layer: Mule::p('app.layer'),
 	title: vars.errorMessage,

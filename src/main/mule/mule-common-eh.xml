@@ -10,7 +10,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="692f9396-e80e-4a37-a03b-780e08c3dbb6" >
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
-	<flow name="nl-common-ehFlow" doc:id="59bcefcd-6db0-4980-ac8f-074f285c10c9" >
+	<flow name="mule-common-ehFlow" doc:id="59bcefcd-6db0-4980-ac8f-074f285c10c9" >
 		<http:listener doc:name="Listener" doc:id="43baaaec-3b37-4fe8-a24c-3aae65f33a6c" config-ref="HTTP_Listener_config" path="/">
 			<http:response statusCode="#[vars.httpStatus default 200]" >
 				<http:headers ><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
