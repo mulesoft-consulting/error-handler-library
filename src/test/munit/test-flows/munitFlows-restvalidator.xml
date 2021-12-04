@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="restvalidatorFlow-BAD_REQUEST"
+		doc:id="be2e68f1-beb1-4c15-863a-acaa7c7cd7d3">
+		<raise-error doc:name="Raise error"
+			doc:id="05b2f1fc-b566-49b5-b0b8-8ee87ad505a9"
+			type="REST-VALIDATOR:BAD_REQUEST" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="c8c1e9fd-2f79-4925-989c-0874b684006e">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="70ff6ccc-481e-43fa-8a66-ef02d64fa5e7"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="restvalidatorFlow-METHOD_NOT_ALLOWED"
+		doc:id="d3c3de21-cfed-4233-b9f3-46324fb00bb2">
+		<raise-error doc:name="Raise error"
+			doc:id="3386c66f-91bb-46ad-b0fd-e543a2a6cbb3"
+			type="REST-VALIDATOR:METHOD_NOT_ALLOWED" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="93f82c5f-be17-4cd0-88ae-2481afe3bb9c">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="af7ac87b-7453-4117-8105-c43eabd0045f"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="restvalidatorFlow-RESOURCE_NOT_FOUND"
+		doc:id="86249a45-92eb-4e63-9366-6a7e4aab9c33">
+		<raise-error doc:name="Raise error"
+			doc:id="275ef3c1-91fa-41f7-a343-9fe501eb98c5"
+			type="REST-VALIDATOR:RESOURCE_NOT_FOUND" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="84c60b08-104e-425d-9dad-d59f360f01dc">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="76dbd274-346a-4bbd-afac-ab78c8b5b85d"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="restvalidatorFlow-UNKNOWN"
+		doc:id="d37671f7-a475-473a-a002-3d4a29100f06">
+		<raise-error doc:name="Raise error"
+			doc:id="763f5316-f74d-4b90-b052-994479772b3d"
+			type="REST-VALIDATOR:UNKNOWN" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="18708b70-2979-42cb-9b01-1018b056e16e">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="b0ab7954-858d-4979-afb0-c119f349f887"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

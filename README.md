@@ -85,7 +85,7 @@ _This can be published to Exchange by updating the project.groupId. Best practic
 4. Go to Project root folder and execute `mvn clean install` . This should pull the library files from Exchange or Artefact repo.  
 5. Configure properties file (Please take this configuration for [reference][2]. This file is only for reference and won't be part of library in the API)
 6. Make sure to configure http-listener response accordingly.(Please take this configuration for ([reference][2] This file is only for reference and won't be part of library in the API)
-7. Add flow reference to `error-mainErrorHandlerFlow` in `On Error Propagate` or `On Error Continue` to initiate the error handler libary logic. ([reference][2]. This file is only for reference and won't be part of library in the API)
+7. Add flow reference to `MainErrorHandlerFlow` in `On Error Propagate` or `On Error Continue` to initiate the error handler libary logic. ([reference][2]. This file is only for reference and won't be part of library in the API)
 
 
 Please refer this [sample project][3] for more info

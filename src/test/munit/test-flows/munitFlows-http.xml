@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:request-config
+		name="HTTP_Request_configuration1"
+		doc:name="HTTP Request configuration"
+		doc:id="02311a43-cb20-430e-bafc-ac6c06ad19b3">
+		<http:request-connection
+			host="tp-eudv-exp-myst-paymentroute-v1.ir-e1.cloudhub.io" />
+	</http:request-config>
+	<flow name="nhs-common-eh-testingFlow"
+		doc:id="4e79237c-f23a-4959-b1b8-b29fef11628a"
+		doc:description="Do not delete this flow. This is used for MUnit Testing">
+		<http:request method="GET" doc:name="Request"
+			doc:id="1424f1c9-622d-42f1-a4f1-5a82ca465110"
+			config-ref="HTTP_Request_configuration" path="/" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="d91838cb-764f-43a3-be07-2e883c81a90d">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="10f625f7-25e0-4410-94d0-c22bef83ab73"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

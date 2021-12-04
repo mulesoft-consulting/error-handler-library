@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<munit:config name="error-http-suite.xml" />
+
+		<munit:test name="ErrorHandlerHttp-Bad-Request-Test" doc:id="bcaff45c-3297-4b33-97ec-43c3cea34b4a" >
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+			<munit:enable-flow-source value="ErrorHandlerHttp" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when bad request" doc:id="19b408e4-e593-4f5c-8da5-16877855c09e" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a24731a4-88ef-47a4-abcd-39cb837b6502" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow Reference" doc:id="0abff80d-d923-4696-afaf-c575585c37c2" name="nhs-common-eh-testingFlow"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that errorCode 404" doc:id="9148429a-16d1-46fd-940e-2c821e6a8142" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]"/>
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type BAD_REQUEST" doc:id="4d4163d0-0121-436c-9234-c0e7b7197eb3" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;BAD_REQUEST&quot;')]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="ErrorHandlerHttp-Not-Found-Test" doc:id="d55cd902-7a03-45de-98b7-c82cc5bd30fe" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerHttp" />
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Not Found" doc:id="9a807c0d-016d-4f21-8bb7-0fa8ecb43fba" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="d91ba663-661f-46c9-bb12-346fe97eee34" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ErrorHandlerHttp" doc:id="cad8c3b9-8a35-432a-be80-5b8ddb7d38dc" name="nhs-common-eh-testingFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that errorCode 404" doc:id="1396062a-c314-4ac7-9d40-25e7c77fc02d" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;404&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type NOT_FOUND" doc:id="10a2a36e-dc7a-4964-991f-6fc37b630e0d" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;NOT_FOUND&quot;')]" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="ErrorHandlerHttp-expression" doc:id="2b655a40-e788-4df6-817a-ff6aa1e87466" description="Test" ignore="true">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerHttp" />
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Not Found" doc:id="819fd37b-238f-4d9c-bb00-d5d2bae726ac" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:EXPRESSION" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="60087bf5-0269-43f9-8e98-5ebc74fb994a" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ErrorHandlerHttp" doc:id="6c223741-42a5-40ce-8477-f89edb7f8511" name="nhs-common-eh-testingFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that errorCode 500" doc:id="03f0d64b-c819-48c4-ad21-60e977976d91" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type EXPRESSION" doc:id="dead33d9-bc27-4a1a-8b71-5d190a3fb157" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;EXPRESSION&quot;')]" />
+		</munit:validation>
+	</munit:test>		
+	
+	
+	<munit:test name="ErrorHandlerHttp-routing" doc:id="b83a1e45-97aa-4016-a219-008a056e566b" description="Test" ignore="true">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerHttp" />
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when ROUTING" doc:id="ce78242e-87d3-48c3-b922-cafaa7fa330d" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="e2884696-8060-4d98-ad30-5a36c9a90e0e" attributeName="doc:id" />
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration" attributeName="config-ref" />
+					<munit-tools:with-attribute whereValue="/" attributeName="path" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:ROUTING" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="bbf8eb34-5f02-4c53-955f-e8a949f75f3e" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ErrorHandlerHttp" doc:id="15828cd0-758c-4afb-b521-1974e7b0ec29" name="ehl-sys-api-flow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that errorCode 400" doc:id="c4cf8160-6c1d-492f-9634-1c8b720148a8" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type ROUTING" doc:id="7d07cc49-ad17-4795-bfbd-12ddb2c1cdd7" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;ROUTING&quot;')]" />
+		</munit:validation>
+	</munit:test>		
+	
+	<munit:test name="ErrorHandlerHttp-UNAUTHORIZED" doc:id="07164563-0745-4c51-9980-9ad7e6d5b97b" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerHttp" />
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Not Found" doc:id="049b6dd4-978d-4ee6-bd74-072b2d53d24b" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:UNAUTHORIZED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c158296d-d3b2-4a1f-bb52-246cff039d90" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ErrorHandlerHttp" doc:id="f74c8cc5-8c5d-46ac-afda-6ed775aad575" name="nhs-common-eh-testingFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that errorCode 401" doc:id="cebd5113-753e-4048-b42d-6607bb618823" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;401&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type UNAUTHORIZED" doc:id="f93ebf09-75d4-4522-9529-e6a5bfb5b447" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNAUTHORIZED&quot;')]" />
+		</munit:validation>
+	</munit:test>		
+	
+	
+	<munit:test name="ErrorHandlerHttp-CONNECTIVITY" doc:id="b0d1396c-6a5b-4839-9639-4ffd21caefe7" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+			<munit:enable-flow-source value="ErrorHandlerBusiness" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Not Found" doc:id="721b56fc-07c2-4965-85ae-9dc04ec4c404" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="4c8a9596-7582-483e-9fa9-be57905f6bd3" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ErrorHandlerHttp" doc:id="9de9179b-ce80-439c-9c2c-73d30982fd9c" name="nhs-common-eh-testingFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that errorCode 504" doc:id="33b0800b-d6dc-4a4b-aa9a-f6322ae30e9d" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;504&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type CONNECTIVITY" doc:id="effe1ab2-1e83-4fc2-b931-f90a28a8f7ca" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;CONNECTIVITY&quot;')]" />
+		</munit:validation>
+	</munit:test>
+	
+	<munit:test name="ErrorHandlerHttp-FORBIDDEN" doc:id="cf814ce8-d078-4205-b807-26378a9a5f00" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerHttp" />
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Not Found" doc:id="9f7c367d-ba82-462c-85bb-4ba0ff079b0a" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:FORBIDDEN" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="5559aabb-fd67-440a-9bde-312a16a9fb6a" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ErrorHandlerHttp" doc:id="bf6ab93b-7cb4-45c3-bf7c-a129d510c212" name="nhs-common-eh-testingFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that errorCode 403" doc:id="6f9a50cb-2e37-41aa-b07c-01e1ccaeb8c9" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;403&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type FORBIDDEN" doc:id="d54bbfb8-6df0-4e63-b00c-e295c468bee3" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;FORBIDDEN&quot;')]" />
+		</munit:validation>
+	</munit:test>	
+	
+
+	<munit:test name="ErrorHandlerHttp-METHOD_NOT_ALLOWED" doc:id="6e014b23-6ac2-4d7d-be58-75076bc7e3bd" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerHttp" />
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when Not Found" doc:id="3e1bb3a7-4693-4063-8504-2b9fa1b02f57" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a1641d41-133c-45e0-ae7c-1bc6f5e1f096" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ErrorHandlerHttp" doc:id="4b774160-82df-4f93-b4e5-ffe918275401" name="nhs-common-eh-testingFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that errorCode 405" doc:id="a35f73b6-22c0-46d6-9779-dc19dbdb847e" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;405&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type METHOD_NOT_ALLOWED" doc:id="b4ca4eb3-55e7-4c00-b8e1-48da411b4ce4" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;METHOD_NOT_ALLOWED&quot;')]" />
+		</munit:validation>
+	</munit:test>	
+	<munit:test name="ErrorHandlerHttp-NOT_ACCEPTABLE" doc:id="80638643-d3d6-4917-b542-5e3939c83dd0" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerHttp" />
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when NOT_ACCEPTABLE" doc:id="b01258b2-3e46-47b6-b43c-11508ce5ff63" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9c7482f4-5c3d-441d-a2c3-afb6077b460e" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ErrorHandlerHttp" doc:id="b8ffce87-8e39-476c-a383-8a4fec2c391b" name="nhs-common-eh-testingFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that errorCode 406" doc:id="5c4cdb20-3363-45f7-b430-5bd9bae3eada" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;406&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type NOT_ACCEPTABLE" doc:id="a1bec05f-ddc2-4183-820f-6ab10ffacf5f" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;NOT_ACCEPTABLE&quot;')]" />
+		</munit:validation>
+	</munit:test>	
+		
+	<munit:test name="ErrorHandlerHttp-UNKNOWN" doc:id="a2259096-379d-4edc-8619-03cad2006e83" description="Test">
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="ErrorHandlerHttp" />
+			<munit:enable-flow-source value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when UNKNOWN" doc:id="5dd88374-6ccd-4527-b764-c3b12afb7a85" processor="http:request" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="HTTP_Request_configuration" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="HTTP:UNKNOWN" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when" doc:id="d3ef3624-e7c9-4da4-96ef-4de3a994cd73" processor="json-logger:logger" >
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ErrorHandlerHttp" doc:id="4d714fc4-0987-472b-ae89-90002d58f9f4" name="nhs-common-eh-testingFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that errorCode 500" doc:id="ab1759b9-5fed-4cb8-a2be-144f83c138c4" is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]" expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that doc:name="Assert That - Payload Error Type UNKNOWN" doc:id="d9766977-6f85-4d9d-99bd-4f5f5f4c82c7" message="The response payload is not correct!" expression="#[output application/java ---write(payload, 'application/json') as String]" is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNKNOWN&quot;')]" />
+		</munit:validation>
+	</munit:test>		
+			
+</mule>

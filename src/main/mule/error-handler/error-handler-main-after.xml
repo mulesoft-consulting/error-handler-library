@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="ErrorHandlerAfterErrorProcessingFlow"
+		doc:id="fa7b0d70-726b-42b3-a17a-adce6bccab3b">
+		<choice doc:name="Propagate error?"
+			doc:id="0df13125-e7cc-428c-9ad8-1e206113f1e0">
+			<when
+				expression='#[(error.errorMessage.attributes.Headers."content-type" contains ("application/json")) and (error.errorMessage.payload.errorCode != null)]'>
+				<choice doc:name="Choice"
+					doc:id="3d204aac-2996-4470-8d89-fb93bb07a22e">
+					<when
+						expression="#[Mule::p('errors.override.http') == 'true']">
+						<ee:transform
+							doc:name="Override Standard Error Response"
+							doc:id="d5015ab9-f99b-4e17-92e0-7b13a0fc7fc8">
+							<ee:message>
+								<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('CustomHTTPErrorHandlerResponse', {}, 120000)]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</when>
+					<otherwise>
+						<ee:transform
+							doc:name="Set Http Status from Response"
+							doc:id="d765d2f6-f6cf-45c5-8e3c-adc981542b34">
+							<ee:message>
+							</ee:message>
+							<ee:variables>
+								<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+error.errorMessage.payload.errorCode default ""]]></ee:set-variable>
+							</ee:variables>
+						</ee:transform>
+						<set-payload value="#[error.errorMessage.payload]"
+							doc:name="Set Payload from Response"
+							doc:id="6a4aacb6-d418-42c4-8982-168fc2019dd2" />
+					</otherwise>
+				</choice>
+			</when>
+			<otherwise>
+				<ee:transform
+					doc:name="Set httpStatus and errorMessage"
+					doc:id="fd1b4f29-9659-4f6a-8591-4f948aec94cd">
+					<ee:message>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[%dw 2.0
+output application/java
+---
+payload.httpStatus default ""]]></ee:set-variable>
+						<ee:set-variable variableName="errorMessage"><![CDATA[%dw 2.0
+output application/java
+---
+payload.errorMessage default ""]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+				<flow-ref doc:name="ErrorHandlerFinalErrorResponseFlow"
+					doc:id="8f12363b-d95c-41dd-a505-3daa08fb4ac6"
+					name="ErrorHandlerFinalErrorResponseFlow" />
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="ErrorHandlerFinalErrorResponseFlow"
+		doc:id="1ca03c37-0d90-4b04-915b-c3fba5f811ce">
+		<json-logger:logger doc:name="Debug Logger"
+			doc:id="5631ce86-fe3d-49f1-a3a0-694d7a9cf7fe"
+			config-ref="JSON_Logger_Config"
+			message="In error-handler-final-error-response-flow"
+			tracePoint="EXCEPTION" priority="DEBUG" />
+		<choice doc:name="Override Standard Final Error Response?"
+			doc:id="a73f6d0f-baf2-40b1-894e-2116c2aefaa7">
+			<when
+				expression="#[Mule::p('errors.override.response') == 'true']">
+				<ee:transform
+					doc:name="Override Standard Error Response"
+					doc:id="7da8f887-a0f4-487c-afd5-8d4cd1c8373a">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('CustomErrorHandlerResponse', {}, 120000)]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise>
+				<ee:transform
+					doc:name="Standard Final Error Response for Logging"
+					doc:id="7430adac-1a62-4f2e-8617-cd4c797a4bcb">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+
+{
+	Element: error.cause.info.Element,
+    ElementDSL: error.cause.info."Element DSL",
+    flowName: error.cause.info.FlowStack.elements.flowName,
+	errorCode: vars.httpStatus,
+	layer: Mule::p('app.layer') default "Unknown",
+	title: vars.errorMessage,
+	detail: error.detailedDescription,
+	description: error.description,
+	errorType: error.errorType.identifier,
+	correlationId: correlationId,	
+	referenceId: uuid()
+}
+ ]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<json-logger:logger
+					doc:name="Detailed Error Logger"
+					doc:id="478b9a8d-3f3b-45f5-911c-aa72cd437453"
+					config-ref="JSON_Logger_Config" message="Detailed error log"
+					tracePoint="EXCEPTION">
+				</json-logger:logger>
+				<ee:transform
+					doc:name="Final Default API Error Response"
+					doc:id="54e987c2-396b-41ff-8af5-9f5080339754">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	errorCode: payload.errorCode,
+	errorType: payload.errorType,
+	title:  payload.title default "System error",
+	correlationId: correlationId,
+	referenceId: payload.referenceId
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

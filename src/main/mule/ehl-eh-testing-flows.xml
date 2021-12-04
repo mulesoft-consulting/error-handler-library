@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+
+	<json-logger:config name="JSON_Logger_Config"
+		doc:name="JSON Logger Config"
+		doc:id="dce55f21-cff1-44b6-b858-3b8212a81817" environment="env"
+		applicationName='#["error-handler-library - " ++ (vars.appName as String default "")]' applicationVersion="2.0.1" logLocationInfo="false"/>
+
+	<http:listener-config name="HTTP_Listener_config"
+		doc:name="HTTP Listener config"
+		doc:id="9b4d6187-fc46-44a6-ab8b-5b2edd86abfd">
+		<http:listener-connection host="0.0.0.0"
+			port="8081" />
+	</http:listener-config>
+
+	<configuration-properties
+		doc:name="Configuration properties - Error"
+		doc:id="f5a39034-4d0b-4811-92e8-9a9bf55b7a64"
+		file="config/error-properties-template.yaml" />
+
+	<configuration-properties
+		doc:name="Configuration properties - Application"
+		doc:id="7eeb7ccb-9632-4440-8522-90f092e13ba7" file="properties.yaml" />
+
+	<http:request-config
+		name="HTTP_Request_configuration"
+		doc:name="HTTP Request configuration"
+		doc:id="ebeef182-e621-42b8-b11e-658530512178">
+		<http:request-connection host="localhost"
+			port="8081" />
+	</http:request-config>
+	<flow name="ehl-exp-api-flow"
+		doc:id="59bcefcd-6db0-4980-ac8f-074f285c10c9">
+		<http:listener doc:name="Listener - Exp Endpoint"
+			doc:id="43baaaec-3b37-4fe8-a24c-3aae65f33a6c"
+			config-ref="HTTP_Listener_config" path="/exp">
+			<http:response
+				statusCode="#[vars.httpStatus as Number default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response
+				statusCode="#[vars.httpStatus as Number default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="set appName" doc:id="feaf5beb-6bba-42a4-8b52-69f5e5ba7744">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="appName" ><![CDATA[%dw 2.0
+output application/java
+---
+"Experience"]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET" doc:name="Process API Request"
+			doc:id="5dae7a22-4194-4a2e-8218-e3a6dcbd3a71"
+			config-ref="HTTP_Request_configuration" path="/prc" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true"
+				logException="true" doc:name="On Error Propagate"
+				doc:id="bbead0f3-5cd7-4ae8-8444-2ef2443e04bf">
+				<flow-ref
+					doc:name="MainErrorHandlerFlow"
+					doc:id="06895105-0001-43d1-b95d-dd2f4d256186"
+					name="MainErrorHandlerFlow" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="ehl-prc-api-flow"
+		doc:id="7d1a03af-211f-4610-9e0d-ac44d87921eb">
+		<http:listener doc:name="Listener - Prc Endpoint"
+			doc:id="c4839fdc-8a81-4cbe-9780-bda352f642a0"
+			config-ref="HTTP_Listener_config" path="/prc">
+			<http:response
+				statusCode="#[vars.httpStatus as Number default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response
+				statusCode="#[vars.httpStatus as Number default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="set appName" doc:id="fbeeb1d5-9fdc-4492-8a16-77fc688e55a6" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="appName" ><![CDATA[%dw 2.0
+output application/java
+---
+"Process"]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="GET" doc:name="System API Request"
+			doc:id="79ac3f44-3724-4554-a16a-388f2dc31857"
+			config-ref="HTTP_Request_configuration" path="/sys" />
+		<raise-error
+			doc:name="Raise error - BUSINESS:INVALID_RESPONSE"
+			doc:id="873dec0a-1581-4c39-9cb3-dfbf23db8b08"
+			type="BUSINESS:INVALID_RESPONSE" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true"
+				logException="true" doc:name="On Error Propagate"
+				doc:id="5db1d952-35e5-4a98-8d24-2a936d6a8a70">
+				<flow-ref
+					doc:name="MainErrorHandlerFlow"
+					doc:id="89a10a6b-3f13-4303-89ba-72df7f0c53ea"
+					name="MainErrorHandlerFlow" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="ehl-sys-api-flow"
+		doc:id="ec786504-9365-45e6-a601-f392c25e2b5a">
+		<http:listener doc:name="Listener - Sys Endpoint"
+			doc:id="6c45bc29-21bf-471e-bec5-7cb1096ef72c"
+			config-ref="HTTP_Listener_config" path="/sys">
+			<http:response
+				statusCode="#[vars.httpStatus as Number default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response
+				statusCode="#[vars.httpStatus as Number default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="set appName" doc:id="67118645-a5db-4351-a085-93eb57a28d51">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="appName"><![CDATA[%dw 2.0
+output application/java
+---
+"System"]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<raise-error doc:name="Raise error - BUSINESS:INVALID_OPERATION" doc:id="c7d905b7-e148-41b9-9e16-a608f5df41fc" type="BUSINESS:INVALID_OPERATION" />
+		<http:request method="GET"
+			doc:name="External API Request"
+			doc:id="695bb48a-3144-4e31-aa6b-3ce8c5480f34"
+			config-ref="HTTP_Request_configuration" path="/ext" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true"
+				logException="true" doc:name="On Error Propagate"
+				doc:id="920d3d2a-8630-4d6d-93c6-5bd205f91b38">
+				<flow-ref
+					doc:name="MainErrorHandlerFlow"
+					doc:id="a2deacab-08eb-4371-916c-f266307475fa"
+					name="MainErrorHandlerFlow" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="ehl-external-api-flow"
+		doc:id="78a17fb8-fad6-4898-91fa-bfb3fe6b3014">
+		<http:listener doc:name="Listener - External API Endpoint"
+			doc:id="4c3e1fb4-cd33-459e-95ad-704a14beb0d3"
+			config-ref="HTTP_Listener_config" path="/ext">
+			<http:response
+				statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response
+				statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<flow-ref doc:name="Flow Reference" doc:id="156b7ae7-edd5-4b4b-bb17-4d913b679971" name="ext-success-flow" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true"
+				logException="true" doc:name="On Error Propagate"
+				doc:id="3287d369-85be-4b39-bb3b-9b0f3c62c667">
+				<ee:transform doc:name="Error Payload"
+					doc:id="571726b2-b9f3-47c2-81dc-20d4aaf86d47">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	cause: "Something went wrong!",
+	reason: "Data not available"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+400]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<sub-flow name="ext-success-flow" doc:id="e81ca4a2-f725-4296-8230-386d8dc50a8d" >
+		<ee:transform doc:name="Success Response" doc:id="138e9ee5-4c01-4e88-88d1-51ffd1bef434" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	response: "Success!!"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="ext-error-subflow" doc:id="d9a5db25-6f8e-4824-9620-ec89bfb6ef84">
+		<raise-error doc:name="Raise error - TECHNICAL:INVALID_DATA" doc:id="f8d05c74-5da3-460b-9174-0ac4e7699856" type="TECHNICAL:INVALID_DATA" />
+	</sub-flow>
+</mule>

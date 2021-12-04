@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="Flow:apikit-bad_request"
+		doc:id="6a08dc60-c434-4907-9f66-aad39ca6b41a">
+		<raise-error doc:name="Raise error - APIKIT:BAD_REQUEST"
+			doc:id="1209af8b-9e31-4b96-b942-023920144e5d"
+			type="APIKIT:BAD_REQUEST" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="90c566a9-2197-4d1e-91c3-326e6d4acb90">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="082bab82-4c5c-4066-8049-cc5e157fbef9"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="Flow:apikit-not_found"
+		doc:id="a605f44f-5a7e-4f8d-8d71-432155a78a29">
+		<raise-error doc:name="Raise error - APIKIT:NOT_FOUND"
+			doc:id="94eefed8-a4db-4956-ae26-b254a585c448" type="APIKIT:NOT_FOUND" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="c3d59e04-3a9b-4cb9-a72a-a4f0ae242857">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="134c1031-a3fa-4423-8d85-1225ff7bc597"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="Flow:apikit-method_not_allowed"
+		doc:id="34f8df07-2abc-49aa-8752-0a200d6cf1e3">
+		<raise-error
+			doc:name="Raise error - APIKIT:METHOD_NOT_ALLOWED"
+			doc:id="d7c59d5e-7266-4dc8-a794-33ae31a6aef4"
+			type="APIKIT:METHOD_NOT_ALLOWED" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="4ba1a016-5165-4cd7-b2d3-3f118a308872">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="e3a0993c-7bd7-4b73-b64c-8401aa9b4de0"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="Flow:apikit-not_acceptable"
+		doc:id="5c469f4f-f0d7-4ca3-b4a5-f984600a84e0">
+		<raise-error
+			doc:name="Raise error - APIKIT:NOT_ACCEPTABLE"
+			doc:id="829f9668-1760-46a0-aa74-176738f49847"
+			type="APIKIT:NOT_ACCEPTABLE" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="1a0ac359-d989-4a56-9d6d-e240934e3003">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="5d8eca2d-12d4-474d-86dd-2f17d8a55d86"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="Flow:apikit-unsupported_media_type"
+		doc:id="48453ea4-7957-4483-a4e4-644cd7795c0c">
+		<raise-error
+			doc:name="Raise error - APIKIT:UNSUPPORTED_MEDIA_TYPE"
+			doc:id="19f2e87a-fddf-4d23-a460-46269484b00e"
+			type="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="f728ceb2-b750-4e84-af51-a1c7d39244ed">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="ae51e13a-07e9-4743-9caa-a187232a31c4"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="Flow:apikit-not_implemented"
+		doc:id="fb84652f-049b-4776-900f-ddcf64108639">
+		<raise-error
+			doc:name="Raise error - APIKIT:NOT_IMPLEMENTED"
+			doc:id="73cc2936-88da-4d94-8e14-b05c0d20ca86"
+			type="APIKIT:NOT_IMPLEMENTED" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="e1b8c89b-5dec-4dcc-9e93-d9e5d437dd54">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="d47473a8-51ca-49c3-acb0-1104f3853354"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="Flow:apikit-unknown"
+		doc:id="448287a0-bcdd-4f17-ba96-5db961874383">
+		<raise-error doc:name="Raise error - APIKIT:UNKNOWN"
+			doc:id="33bbb0d9-4df5-4c25-9399-e42544323949" type="APIKIT:UNKNOWN" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="0919c74d-1847-4258-9991-13515f66dd97">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="57a71e20-a2b3-468d-9a3c-8d5417f2dc30"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

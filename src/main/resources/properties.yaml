@@ -1,0 +1,7 @@
+errors:
+  applicationPayload:
+    log: "true"
+  externalApiErrorPayload:
+    log: "true"    
+    
+app.layer: "EXP"    

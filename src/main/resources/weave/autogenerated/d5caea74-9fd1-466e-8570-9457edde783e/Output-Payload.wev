@@ -1,0 +1,51 @@
+%dw 2.0
+
+type auto_d5caea74_9fd1_466e_8570_9457edde783e_Output_Payload = Null | {|
+  length?: java_util_Optional, 
+  byteLength?: java_util_OptionalLong, 
+  dataType?: org_mule_runtime_api_metadata_DataType, 
+  referenceId?: String, 
+  errorCode?: Null, 
+  correlationId?: String, 
+  value?: java_lang_Object, 
+  title?: String
+|}
+type org_mule_runtime_api_metadata_DataType = {|
+  mediaType?: org_mule_runtime_api_metadata_MediaType, 
+  streamType?: Boolean {"typeId": "boolean"}, 
+  "type"?: String
+|} {"typeId": "org.mule.runtime.api.metadata.DataType"}
+type org_mule_runtime_api_metadata_MediaType = {|
+  charset?: java_util_Optional_6, 
+  definedInApp?: Boolean {"typeId": "boolean"}, 
+  primaryType?: String, 
+  subType?: String
+|} {"typeId": "org.mule.runtime.api.metadata.MediaType"}
+type java_util_Optional_6 = {|
+  empty?: Boolean {"typeId": "boolean"}, 
+  present?: Boolean {"typeId": "boolean"}
+|} {"typeId": "java.util.Optional"}
+
+
+
+
+
+
+type java_util_Optional = {|
+  empty?: Boolean {"typeId": "boolean"}, 
+  present?: Boolean {"typeId": "boolean"}
+|} {"typeId": "java.util.Optional"}
+
+
+type java_lang_Object = {|  |} {"class": "java.lang.Object",
+"typeId": "java.lang.Object"}
+
+
+type java_util_OptionalLong = {|
+  asLong?: Number, 
+  empty?: Boolean {"typeId": "boolean"}, 
+  present?: Boolean {"typeId": "boolean"}
+|} {"typeId": "java.util.OptionalLong"}
+
+
+

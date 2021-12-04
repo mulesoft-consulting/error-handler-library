@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="munitFlows-amq-test-suite.xml" />
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:ACKINGTest"
+		doc:id="8f6c7266-206c-4369-a3b5-0374fddaf2eb" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="f20e5e59-afef-420c-b73e-bd3a7c1c1fc7"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:ACKING error"
+				doc:id="cfbfd2fc-49c0-441c-af81-2b54d6481dd2"
+				processor="anypoint-mq:publish">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="anypoint-mq:ACKING" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to munitFlows-amqFlow:ACKING"
+				doc:id="57b8ce1a-5823-49fc-8ff7-b1d9a21a38bd"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type ACKING"
+				doc:id="79df8a15-7310-45c9-818c-f8bb4415acc7"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;ACKING&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 400"
+				doc:id="a44ed33b-2358-4294-8c32-e9a7ed24f04c"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:CONSUMINGTest"
+		doc:id="1b75a247-7416-467f-a3df-9f03f1c70e42" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="23bf6609-6a82-4108-9b5e-acb870113cea"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:CONSUMING error"
+				doc:id="c6f0a066-2cf1-470b-b401-0413510d10b6"
+				processor="anypoint-mq:publish ">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="anypoint-mq:CONSUMING" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to munitFlows-amqFlow:CONSUMING"
+				doc:id="b3e07b7f-a8f3-49c7-a64b-2f3794473074"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type CONSUMING"
+				doc:id="9c6a323c-cc0e-4456-9cc5-d8e3cc58bd2b"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;CONSUMING&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 400"
+				doc:id="f6d923eb-e8e0-471f-940a-71ec7694d070"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:CONNNECTIVITYTest"
+		doc:id="679d4c85-f21e-4253-97b2-d46e47f6a7ff" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="fc07efad-1487-4d9b-9dfb-2532672fef97"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:CONNECTIVITY error"
+				doc:id="613417a2-d761-4fec-92b9-9e9d43d6be90"
+				processor="anypoint-mq:publish">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error
+						typeId="anypoint-mq:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to munitFlows-amqFlow:CONNECTIVITY"
+				doc:id="41a8bdab-dfe7-4a06-ba90-ddf92962b992"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload error Type CONNECTIVITY"
+				doc:id="be622911-2561-4777-858c-c0eac06931f3"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;CONNECTIVITY&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 504"
+				doc:id="e713a019-b7be-474f-888b-92953bea16d9"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;504&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:TIMEOUTTest"
+		doc:id="1296e25d-681d-4e3a-9249-c70832c84fb5" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="ce177bea-2cb2-42d2-9972-70d6cd9ba5fd"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:TIMEOUT error"
+				doc:id="9a97387a-354b-43ce-b0fe-5cea9a7a5cd7"
+				processor="anypoint-mq:publish">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="anypoint-mq:TIMEOUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to munitFlows-amqFlow:TIMEOUT"
+				doc:id="dc2a3b95-6068-4ffa-85db-7368bb0bf7bc"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload error Type TIMEOUT"
+				doc:id="19bfe3a3-8dc1-4cf5-b870-1d572d3a0676"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;TIMEOUT&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 408"
+				doc:id="8f85777f-12da-49ba-ba8e-eea408ba85e0"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;408&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:DESTINATION_NOT_FOUNDTest"
+		doc:id="1aeabc5d-beee-4789-ae26-cf5676d01b86" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="e0995eef-6bfe-497b-b085-ec066e32e1ea"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:DESTINATION_NOT_FOUND error"
+				doc:id="60d85a7b-be79-4e2c-aa9d-68ab7f41ba5b"
+				processor="anypoint-mq:publish">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error
+						typeId="anypoint-mq:DESTINATION_NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to munitFlows-amqFlow:DESTINATION_NOT_FOUND"
+				doc:id="e1cf2e3d-7717-4c08-8d7e-3d3f8118bc3c"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload error Type DESTINATION_NOT_FOUND"
+				doc:id="0d91fcd6-a9bf-4193-89fd-a93c5fc09eba"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;DESTINATION_NOT_FOUND&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 404"
+				doc:id="e452717d-5303-49aa-b234-69b83c495cbc"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;404&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:RETRY_EXHAUSTEDTest"
+		doc:id="dd716a31-a50c-4b3c-bc02-bbbb659797a6" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="46a5b794-e921-4225-9c1f-473f932ffbe5"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:RETRY_EXHAUSTED error"
+				doc:id="fcf7a0b5-a733-47d5-9816-2a3fedef729e"
+				processor="anypoint-mq:publish">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error
+						typeId="anypoint-mq:RETRY_EXHAUSTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to munitFlows-amqFlow:RETRY_EXHAUSTED"
+				doc:id="ac46501b-15de-4eda-9231-a9ee3d08693a"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload error Type RETRY_EXHAUSTED"
+				doc:id="d8f88a86-3cb3-442a-9c8d-399b961b42b4"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;RETRY_EXHAUSTED&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 504"
+				doc:id="87af7e23-2f60-43f7-9d1f-4810a7b2582e"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;504&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:PUBLISHINGTest"
+		doc:id="94fa653c-faab-40d9-98c5-19c7d4a3e45d" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="96bb43ae-0db9-4c37-893d-c86197325ebf"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:PUBLISHING error"
+				doc:id="86625652-4c99-45cf-b3af-44ae85f64fcd"
+				processor="anypoint-mq:publish">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error
+						typeId="anypoint-mq:PUBLISHING" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to munitFlows-amqFlow:PUBLISHING"
+				doc:id="f4dfb414-0df2-4c0e-afca-87ce6c71f4b6"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload error Type PUBLISHING"
+				doc:id="b941ca47-f331-42b7-9dd6-bfd05c63494a"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;PUBLISHING&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 400"
+				doc:id="0855cfbc-266d-47f2-bf5f-7a7c64e201a5"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:ILLEGAL_BODYTest"
+		doc:id="49b2b561-0bef-4440-839b-d4fb4577b0a7" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="7b7fbf58-4d95-4a07-a271-4cd381ec6e35"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:ILLEGAL_BODY error"
+				doc:id="2d6d3c86-a173-4fb6-b69f-adb369ce43c1"
+				processor="anypoint-mq:publish">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error
+						typeId="anypoint-mq:ILLEGAL_BODY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to munitFlows-amqFlow:ILLEGAL_BODY"
+				doc:id="4662ab5f-9701-475b-b0a0-5815a7b7760a"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload error Type ILLEGAL_BODY"
+				doc:id="aa4a533b-7ca2-4da9-8634-f3ce2d956916"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;ILLEGAL_BODY&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 400"
+				doc:id="841ba268-8f10-4044-8e77-638e8fe6d6fc"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:UNKNOWNTest"
+		doc:id="aee681c1-557c-42e4-92a1-1fbcd6995adc" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="4fca0e71-ea0b-43ad-a89d-56e71de91fec"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:UNKNOWN error"
+				doc:id="d119c417-5960-4864-808d-87f89bbfde11"
+				processor="anypoint-mq:publish">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="anypoint-mq:UNKNOWN" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to munitFlows-amqFlow:UNKNOWN"
+				doc:id="cb271ab6-5d8d-4117-874d-3462ff2a0416"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload error Type UNKNOWN"
+				doc:id="68eef9df-63e2-495d-a6a3-f258699c8cfb"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNKNOWN&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 500"
+				doc:id="a6d59d3a-da76-4ffe-932a-2b1f4e79ae30"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:RESOURCE_NOT_FOUNDTest"
+		doc:id="0ab1fd24-7b42-4226-831d-44a9809f1c57" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="72033ead-7536-499f-9761-62d6a21843b9"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:RESOURCE_NOT_FOUND error"
+				doc:id="0c37cc79-9398-41ac-ad1e-1617a9c7c3cb"
+				processor="anypoint-mq:ack">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Ack" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error
+						typeId="anypoint-mq:RESOURCE_NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to munitFlows-amqFlow:RESOURCE_NOT_FOUND"
+				doc:id="f6cd1398-1342-4310-86a8-0f8fce30518a"
+				name="munitFlows-amqAckFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload error Type RESOURCE_NOT_FOUND"
+				doc:id="4cca6ac6-3f2c-497f-82f4-168c0467dd96"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;RESOURCE_NOT_FOUND&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 404"
+				doc:id="191dab45-95eb-4641-99b3-dbfab458d32e"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;404&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="munitFlows-amq-test-suite-munitFlows-amqFlow:DEFAULTTest"
+		doc:id="45c8b379-532a-4765-8cc7-4ff9e16e22a1" description="Test" ignore="true">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerAMQ" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when
+				doc:name="Mock when json-logger"
+				doc:id="a2730611-5457-4a26-9bf6-0fb27fee3c99"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+			<munit-tools:mock-when
+				doc:name="Mock when anypoint-mq:DEFAULT error"
+				doc:id="4219df6a-2ed0-4381-a710-186e52443877"
+				processor="anypoint-mq:publish">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute
+						whereValue="Publish-MQ" attributeName="doc:name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="anypoint-mq:DEFAULT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to munitFlows-amqFlow:DEFAULT"
+				doc:id="551713ef-aa1c-4d85-8ece-d517a2ef3473"
+				name="munitFlows-amqFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload error Type DEFAULT"
+				doc:id="a85beb29-3494-42e5-b333-a405f38f72a4"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;DEFAULT&quot;')]" />
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 500"
+				doc:id="32324820-7410-481d-b7f6-abea855b3f57"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+</mule>

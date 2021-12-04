@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:anypoint-mq="http://www.mulesoft.org/schema/mule/anypoint-mq"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/anypoint-mq http://www.mulesoft.org/schema/mule/anypoint-mq/current/mule-anypoint-mq.xsd">
+	<anypoint-mq:config name="Anypoint_MQ_Config"
+		doc:name="Anypoint MQ Config"
+		doc:id="f4dc5041-9fad-448b-a580-e8743372fc01">
+		<anypoint-mq:connection clientId="testid"
+			clientSecret="testsecret" />
+	</anypoint-mq:config>
+	<flow name="munitFlows-amqFlow"
+		doc:id="942dfca4-d85a-4521-9ff0-940cbd9b0554">
+		<anypoint-mq:publish doc:name="Publish-MQ"
+			doc:id="6373c847-4e67-4db3-a0cf-353bbbee6a29"
+			config-ref="Anypoint_MQ_Config" destination="test123" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="4ab89409-778f-4d9f-826b-660969f146a2" type="ANY">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="e245972d-3faf-4c57-94ce-af7f97914031"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="munitFlows-amqAckFlow"
+		doc:id="762f75ea-1d15-41dd-aeec-668da36eed0a">
+		<anypoint-mq:ack doc:name="Ack"
+			doc:id="cbc63a22-f6fd-4385-a28d-7bca65615f52"
+			config-ref="Anypoint_MQ_Config" ackToken="hghg" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true"
+				logException="true" doc:name="On Error Propagate"
+				doc:id="a4ce3d17-63fe-457b-880b-7ae7ec317e46">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="510a1868-6d40-43d8-b166-2687a96f3f7c"
+					name="MainErrorHandlerFlow" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

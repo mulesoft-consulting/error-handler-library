@@ -1,8 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.mulesoft</groupId>
+	<!-- TODO: Please Add appropriate ${project.groupId} -->
+	<groupId>9603fc66-9985-4754-8a84-6dfcfc3b2d72</groupId>
 	<artifactId>error-handler-library</artifactId>
 	<version>1.0.0</version>
 	<packaging>mule-application</packaging>
@@ -15,6 +16,7 @@
 
 		<app.runtime>4.3.0</app.runtime>
 		<mule.maven.plugin.version>3.3.5</mule.maven.plugin.version>
+		<munit.version>2.3.6</munit.version>
 	</properties>
 
 	<build>
@@ -26,6 +28,29 @@
 				<extensions>true</extensions>
 				<configuration>
 					<classifier>mule-application</classifier>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.mulesoft.munit.tools</groupId>
+				<artifactId>munit-maven-plugin</artifactId>
+				<version>${munit.version}</version>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+							<goal>coverage-report</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<coverage>
+						<runCoverage>true</runCoverage>
+						<formats>
+							<format>html</format>
+						</formats>
+					</coverage>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -51,9 +76,10 @@
 			<classifier>mule-plugin</classifier>
 		</dependency>
 
-		<!-- This dependency is pulled from Exchange asset - JSON logger -->
+		<!-- This dependency is pulled from Exchange asset - JSON logger. 
+		Please update appropriate ${project.groupId} and corresponding json-logger version -->
 		<dependency>
-			<groupId>b144f004-790a-4e9b-8ff3-61a28db48356</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>json-logger</artifactId>
 			<version>2.0.1</version>
 			<classifier>mule-plugin</classifier>
@@ -64,6 +90,32 @@
 			<artifactId>mule-jms-connector</artifactId>
 			<version>1.6.3</version>
 			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.connectors</groupId>
+			<artifactId>anypoint-mq-connector</artifactId>
+			<version>3.1.1</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.munit</groupId>
+			<artifactId>munit-runner</artifactId>
+			<version>2.3.6</version>
+			<classifier>mule-plugin</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.munit</groupId>
+			<artifactId>munit-tools</artifactId>
+			<version>2.3.6</version>
+			<classifier>mule-plugin</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.weave</groupId>
+			<artifactId>assertions</artifactId>
+			<version>1.0.2</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -81,14 +133,14 @@
 			<layout>default</layout>
 		</repository>
 
-		<!-- TODO: Replace repository with your artifact repo details.
-		With this configurations can be published to Exchange. Please Add appropriate ${project.groupId} -->
-        <repository>
-            <id>Exchange2</id>
-            <name>Exchange2 Repository</name>
-            <url>https://maven.anypoint.mulesoft.com/api/v2/organizations/${project.groupId}/maven</url>
-            <layout>default</layout>
-        </repository>
+		<!-- TODO: Replace repository with your artifact repo details. This 
+			configuration can be used for Exchange publish. Please Add appropriate ${project.groupId} -->
+		<repository>
+			<id>Exchange2</id>
+			<name>Exchange2 Repository</name>
+			<url>https://maven.anypoint.mulesoft.com/api/v2/organizations/${project.groupId}/maven</url>
+			<layout>default</layout>
+		</repository>
 		<!-- *************************************************** -->
 
 	</repositories>
@@ -104,15 +156,14 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-	
-	    <distributionManagement>
-		<!-- TODO: Replace repository with your artifact repo details.
-		With this configurations can be published to Exchange. Please Add appropriate ${project.groupId} -->
-        <repository>
-            <id>Exchange2</id>
-            <name>Exchange2 Repository</name>
-            <url>https://maven.anypoint.mulesoft.com/api/v2/organizations/${project.groupId}/maven</url>
-            <layout>default</layout>
-        </repository>
-    </distributionManagement>
+	<distributionManagement>
+		<!-- TODO: Replace repository with your artifact repo details. This 
+			configuration can be used for Exchange publish. Please Add appropriate ${project.groupId} -->
+		<repository>
+			<id>Exchange2</id>
+			<name>Exchange2 Repository</name>
+			<url>https://maven.anypoint.mulesoft.com/api/v2/organizations/${project.groupId}/maven</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
 </project>

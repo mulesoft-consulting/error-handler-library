@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="error-apikit-suite.xml" />
+
+	<munit:test name="error-apikit-suite-BAD_REQUEST"
+		doc:id="cc44b0f8-e387-4bfb-b938-8e2b3ee9d814"
+		description="Test APIKIT:BAD_REQUEST" timeOut="1200000">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerApiKit" />
+			<munit:enable-flow-source
+				value="MainErrorHandlerFlow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerRouteerrorTypeFlow" />
+			<munit:enable-flow-source
+				value="ehl-sys-api-flow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="81682a9c-b6f5-41ec-a7f5-a101077785fb"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to Flow:apikit-bad_request"
+				doc:id="5fd3608b-5cbf-48e1-888d-4fa1c30a01f9"
+				name="Flow:apikit-bad_request" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]"
+				message="The response payload is not correct!"
+				doc:name="Assert That - Payload has error Code 400" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type BAD_REQUEST"
+				doc:id="626e1f14-42ea-40c1-99e0-bd6a72dac5a5"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;BAD_REQUEST&quot;')]" />
+
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="error-apikit-suite-NOT_FOUND"
+		doc:id="4f5526a9-1688-4593-8ce2-8c385aec7018"
+		description="Test APIKIT:NOT_FOUND" timeOut="1200000">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerApiKit" />
+			<munit:enable-flow-source
+				value="MainErrorHandlerFlow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerRouteerrorTypeFlow" />
+			<munit:enable-flow-source
+				value="ehl-sys-api-flow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="a0a57701-9941-4f57-a200-6458074932cf"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to Flow:apikit-not_found"
+				doc:id="b1b3723b-57f7-4b58-826d-53bcd1369eac"
+				name="Flow:apikit-not_found" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;404&quot;')]"
+				message="The response payload is not correct!"
+				doc:name="Assert That - Payload has error Code 404" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type BAD_REQUEST"
+				doc:id="e410c5e1-34c1-4374-8d0e-ebcd1c748efe"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;NOT_FOUND&quot;')]" />
+
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="error-apikit-suite-METHOD_NOT_ALLOWED"
+		doc:id="829034c4-95e7-46f6-817a-38af5f2756fd"
+		description="Test APIKIT:METHOD_NOT_ALLOWED" timeOut="1200000">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerApiKit" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="e5a3ca1c-6542-4f02-b7be-3a063318aa06"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to Flow:apikit-method_not_allowed"
+				doc:id="457adb0f-21ae-49d8-a83c-2eadd50c6be4"
+				name="Flow:apikit-method_not_allowed" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;405&quot;')]"
+				message="The response payload is not correct!"
+				doc:name="Assert That - Payload has error Code 405" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type METHOD_NOT_ALLOWED"
+				doc:id="de766e47-e922-4255-95b8-8ebe861ff2fb"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;METHOD_NOT_ALLOWED&quot;')]" />
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="error-apikit-suite-NOT_ACCEPTABLE"
+		doc:id="aa24dee2-535b-483b-a509-8f9250cfae37"
+		description="Test APIKIT:NOT_ACCEPTABLE" timeOut="1200000">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerApiKit" />
+			<munit:enable-flow-source
+				value="MainErrorHandlerFlow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerRouteerrorTypeFlow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="7ba3ac96-f3ff-45b6-9995-36c1e41cba2f"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to Flow:apikit-not_acceptable"
+				doc:id="0b1a8e33-db0c-41ea-9818-a4001d867704"
+				name="Flow:apikit-not_acceptable" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;406&quot;')]"
+				message="The response payload is not correct!"
+				doc:name="Assert That - Payload has error Code 406" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type NOT_ACCEPTABLE"
+				doc:id="919fd896-09ee-4f23-b628-5968476001d1"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;NOT_ACCEPTABLE&quot;')]" />
+
+		</munit:validation>
+	</munit:test>
+	<munit:test name="error-apikit-suite-UNSUPPORTED_MEDIA_TYPE"
+		doc:id="06166c67-1ae9-423e-9175-0bc4abf0c837"
+		description="Test APIKIT:UNSUPPORTED_MEDIA_TYPE" timeOut="1200000">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerApiKit" />
+			<munit:enable-flow-source
+				value="MainErrorHandlerFlow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerRouteerrorTypeFlow" />
+			<munit:enable-flow-source
+				value="ehl-sys-api-flow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="342dc637-5da2-4158-961d-fea3a4fc742e"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to Flow:apikit-unsupported_media_type"
+				doc:id="ceaa4fa2-14d4-46c6-a614-f2d2ef7b29eb"
+				name="Flow:apikit-unsupported_media_type" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;415&quot;')]"
+				message="The response payload is not correct!"
+				doc:name="Assert That - Payload has error Code 415" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type UNSUPPORTED_MEDIA_TYPE"
+				doc:id="40746412-9e7e-4b25-9aa6-038956b91546"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNSUPPORTED_MEDIA_TYPE&quot;')]" />
+
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="error-apikit-suite-NOT_IMPLEMENTED"
+		doc:id="b47081ab-f121-4455-b00d-209f8eb40b80"
+		description="Test APIKIT:NOT_IMPLEMENTED" timeOut="1200000">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerApiKit" />
+			<munit:enable-flow-source
+				value="MainErrorHandlerFlow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerRouteerrorTypeFlow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="e649a9e2-0642-474a-87f4-177ddb5f1afa"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to Flow:apikit-not_implemented"
+				doc:id="db56ed21-5d72-45bb-9c3f-1d0a035ef22c"
+				name="Flow:apikit-not_implemented" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;501&quot;')]"
+				message="The response payload is not correct!"
+				doc:name="Assert That - Payload has error Code 501" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type NOT_IMPLEMENTED"
+				doc:id="b8004ef6-59c0-42fa-905b-960f4b2f427c"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;NOT_IMPLEMENTED&quot;')]" />
+
+		</munit:validation>
+	</munit:test>
+	<munit:test name="error-apikit-suite-UNKNOWN"
+		doc:id="8d26b04d-2c6e-4e5b-9558-192bc755aab3"
+		description="Test APIKIT:UNKNOWN" timeOut="1200000">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerApiKit" />
+			<munit:enable-flow-source
+				value="MainErrorHandlerFlow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerRouteerrorTypeFlow" />
+			<munit:enable-flow-source
+				value="ehl-sys-api-flow" />
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="22c90ae4-7573-4032-9475-7bcdf47ad06d"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to Flow:apikit-unknown"
+				doc:id="d4513f7c-421b-489a-9a32-dd907cc49938"
+				name="Flow:apikit-unknown" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]"
+				message="The response payload is not correct!"
+				doc:name="Assert That - Payload has error Code 400" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type UNKNOWN"
+				doc:id="ec164db2-4e0b-4465-ac31-d247b2107080"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNKNOWN&quot;')]" />
+
+		</munit:validation>
+	</munit:test>
+</mule>

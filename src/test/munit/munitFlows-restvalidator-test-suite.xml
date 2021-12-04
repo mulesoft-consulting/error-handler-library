@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="error-restvalidator_suite.xml" />
+	<munit:test
+		name="error-restvalidator-suite-restvalidatorTest-bad_request"
+		doc:id="0583ddab-2199-4d8c-a4b0-bd1f637b80d7"
+		description="Test BAD_REQUEST">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerRestValidator" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="06b037c7-777d-4225-97f9-0001068114c4"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to restvalidatorFlow-BAD_REQUEST"
+				doc:id="1149abd5-7097-4b19-b95f-40dfbbcfc5fd"
+				name="restvalidatorFlow-BAD_REQUEST" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 400"
+				doc:id="220d22a7-20f3-4bd7-a008-56d52c216c25"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type BAD_REQUEST"
+				doc:id="2b833002-07ae-4d33-87ef-febe9899edfb"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;BAD_REQUEST&quot;')]" />
+		</munit:validation>
+	</munit:test>
+
+	<munit:test
+		name="error-restvalidator-suite-restvalidatorTest-method_not_allowed"
+		doc:id="66470b34-d7e0-4c85-87cb-b14806157335"
+		description="Test METHOD_NOT_ALLOWED">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="8a83946a-79f2-44f5-9394-2c55cb5db94d"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to restvalidatorFlow-METHOD_NOT_ALLOWED"
+				doc:id="26215214-2c51-4563-98d4-88aac818bbb9"
+				name="restvalidatorFlow-METHOD_NOT_ALLOWED" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 405"
+				doc:id="a63ff059-1641-4fa2-a7ce-582bf69b5172"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;405&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type BAD_REQUEST"
+				doc:id="f55bbe6b-c465-4ce6-bc74-5e0ec6bdd751"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;METHOD_NOT_ALLOWED&quot;')]" />
+		</munit:validation>
+	</munit:test>
+
+	<munit:test
+		name="error-restvalidator-suite-restvalidatorTest-resource_not_found"
+		doc:id="4171ab92-2370-404b-8a6b-e69b7605d85d"
+		description="Test RESOURCE_NOT_FOUND">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="64ca7810-5f54-4839-a8d1-8618beec1ca2"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to restvalidatorFlow-RESOURCE_NOT_FOUND"
+				doc:id="d7d0ab82-9256-4310-8d0f-ab84f11cc63c"
+				name="restvalidatorFlow-RESOURCE_NOT_FOUND" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 404"
+				doc:id="c8b40f5e-e75f-4264-8b68-129c0cbd16e6"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;404&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type RESOURCE_NOT_FOUND"
+				doc:id="98163f35-847a-4214-b234-462188917de0"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;RESOURCE_NOT_FOUND&quot;')]" />
+		</munit:validation>
+	</munit:test>
+
+	<munit:test
+		name="error-restvalidator-suite-restvalidatorTest-unknown"
+		doc:id="5e506808-ef79-4f0c-997a-f622cb393a4e"
+		description="Test UNKNOWN">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="a1bcaebd-74a3-4575-aa5b-3aea1ffe192c"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to restvalidatorFlow-UNKNOWN"
+				doc:id="77b14efa-12e6-41e1-bd04-e8e5229967e7"
+				name="restvalidatorFlow-UNKNOWN" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 500"
+				doc:id="a1ba3c88-e6e1-4bf2-85e5-6881da313ece"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type UNKNOWN"
+				doc:id="b522ca02-785c-4233-856d-9c39ca24a6e4"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNKNOWN&quot;')]" />
+		</munit:validation>
+	</munit:test>
+</mule>
