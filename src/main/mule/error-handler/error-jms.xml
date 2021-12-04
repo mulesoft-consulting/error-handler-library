@@ -13,8 +13,8 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 		doc:id="41b30ea8-6c38-4999-9672-121cb0ff5537">
 		<json-logger:logger doc:name="Debug Logger"
 			doc:id="433a154c-43ef-4c38-b13f-436ce4dd6939"
-			config-ref="JSON_Logger_Config" message="In ErrorHandlerJMS"
-			tracePoint="EXCEPTION" priority="DEBUG" />
+			message="In ErrorHandlerJMS"
+			tracePoint="EXCEPTION" priority="DEBUG" config-ref="JSON_Logger_Config"/>
 		<choice doc:name="Override JMS Error Handler?"
 			doc:id="c90bec94-5207-4840-b387-ee22763f8fb7">
 			<when expression="#[Mule::p('errors.override.jms') == 'true']">
@@ -59,8 +59,8 @@ Mule::lookup('ExtendJMSErrorHandler', {}, 120000)]]></ee:set-payload>
 					<otherwise>
 						<json-logger:logger doc:name="Debug Logger"
 							doc:id="379f4a72-0caf-41dc-bef3-22eb3eab19ad"
-							config-ref="JSON_Logger_Config" message="Default JMS error"
-							tracePoint="EXCEPTION" priority="DEBUG" />
+							message="Default JMS error"
+							tracePoint="EXCEPTION" priority="DEBUG" config-ref="JSON_Logger_Config"/>
 					</otherwise>
 				</choice>
 			</otherwise>

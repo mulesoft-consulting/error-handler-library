@@ -51,9 +51,8 @@ error.errorType.identifier default ""]]></ee:set-variable>
 		doc:id="591084fa-dce5-464f-9a92-d13e86a101d2">
 		<json-logger:logger doc:name="Debug Logger"
 			doc:id="0dd16a02-8db4-4c6f-94d2-d5fa620bb84f"
-			config-ref="JSON_Logger_Config"
 			message="In ErrorHandlerRouteerrorTypeFlow" tracePoint="EXCEPTION"
-			priority="DEBUG" />
+			priority="DEBUG" config-ref="JSON_Logger_Config"/>
 		<ee:transform doc:name="Route to respective error handler based on error type" doc:id="e5ad8e71-84c8-4206-98d0-07d061d50c2d" >
 			<ee:message />
 			<ee:variables >
@@ -94,9 +93,8 @@ errorHandlerFlow]]></ee:set-variable>
 		doc:id="6cc20431-c48a-483e-838c-edcd8b980aa5">
 		<json-logger:logger doc:name="Debug Logger"
 			doc:id="40c021ad-53b6-42e4-a68f-e389f0ef742b"
-			config-ref="JSON_Logger_Config"
 			message="In error-handler-after-errorTypeFlow" tracePoint="EXCEPTION"
-			priority="DEBUG" />
+			priority="DEBUG" config-ref="JSON_Logger_Config"/>
 		<flow-ref doc:name="ErrorHandlerAfterErrorProcessingFlow"
 			doc:id="142372a9-b58d-4579-bd14-81ba72ba3784"
 			name="ErrorHandlerAfterErrorProcessingFlow" />

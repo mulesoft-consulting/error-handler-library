@@ -5,13 +5,8 @@
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
-	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="dce55f21-cff1-44b6-b858-3b8212a81817" environment="env" applicationName="nl-common-eh" applicationVersion="2.0.1"/>
-	<configuration-properties doc:name="Configuration properties" doc:id="f5a39034-4d0b-4811-92e8-9a9bf55b7a64" file="config/error-properties-template.yaml" />
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="692f9396-e80e-4a37-a03b-780e08c3dbb6" >
-		<http:listener-connection host="0.0.0.0" port="8081" />
-	</http:listener-config>
 	<flow name="mule-common-ehFlow" doc:id="59bcefcd-6db0-4980-ac8f-074f285c10c9" >
-		<http:listener doc:name="Listener" doc:id="43baaaec-3b37-4fe8-a24c-3aae65f33a6c" config-ref="HTTP_Listener_config" path="/">
+		<http:listener doc:name="Listener" doc:id="43baaaec-3b37-4fe8-a24c-3aae65f33a6c" path="/" config-ref="HTTP_Listener_config">
 			<http:response statusCode="#[vars.httpStatus default 200]" >
 				<http:headers ><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
 			</http:response>
@@ -23,7 +18,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<raise-error doc:name="Raise error" doc:id="8999b74c-826e-415d-9471-51c2ce1e4b6b" type="BUSINESS:INVALID_RESPONSE"/>
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="bbead0f3-5cd7-4ae8-8444-2ef2443e04bf" >
-				<flow-ref doc:name="Flow Reference" doc:id="06895105-0001-43d1-b95d-dd2f4d256186" name="error-mainErrorHandlerFlow" />
+				<flow-ref doc:name="Flow Reference" doc:id="06895105-0001-43d1-b95d-dd2f4d256186" name="MainErrorHandlerFlow" />
 			</on-error-propagate>
 		</error-handler>
 	</flow>
