@@ -10,7 +10,7 @@
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<munit:config name="error-http-suite.xml" />
 
-		<munit:test name="ErrorHandlerHttp-Bad-Request-Test" doc:id="bcaff45c-3297-4b33-97ec-43c3cea34b4a" >
+		<munit:test name="ErrorHandlerHttp-Bad-Request-Test" doc:id="bcaff45c-3297-4b33-97ec-43c3cea34b4a">
 		<munit:enable-flow-sources >
 			<munit:enable-flow-source value="ErrorHandlerDefault" />
 			<munit:enable-flow-source value="ErrorHandlerHttp" />
@@ -61,7 +61,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		</munit:validation>
 	</munit:test>
 	
-	<munit:test name="ErrorHandlerHttp-expression" doc:id="2b655a40-e788-4df6-817a-ff6aa1e87466" description="Test" ignore="true">
+	<munit:test name="ErrorHandlerHttp-expression" doc:id="2b655a40-e788-4df6-817a-ff6aa1e87466" description="Test">
 		<munit:enable-flow-sources >
 			<munit:enable-flow-source value="ErrorHandlerHttp" />
 			<munit:enable-flow-source value="ErrorHandlerDefault" />
@@ -98,7 +98,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 				<munit-tools:with-attributes >
 					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
 					<munit-tools:with-attribute whereValue="Request" attributeName="doc:name" />
-					<munit-tools:with-attribute whereValue="e2884696-8060-4d98-ad30-5a36c9a90e0e" attributeName="doc:id" />
 					<munit-tools:with-attribute whereValue="HTTP_Request_configuration" attributeName="config-ref" />
 					<munit-tools:with-attribute whereValue="/" attributeName="path" />
 				</munit-tools:with-attributes>
