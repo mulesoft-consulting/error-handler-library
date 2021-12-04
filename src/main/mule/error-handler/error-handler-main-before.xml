@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<flow name="ErrorHandlerMainBeforeErrorPayloadLogFlow"
+		doc:id="1acdeca5-36ab-49dc-94af-59659559dbfd">
+		<choice
+			doc:name="External API Error - Override or Log Error Payload?"
+			doc:id="8ef1174b-d92d-4513-aba2-bbd214c47df4">
+			<when
+				expression="#[Mule::p('errors.override.errorPayload') == 'true']">
+				<ee:transform
+					doc:name="Oveerride External Error Payload Logging"
+					doc:id="9113cb6b-fd5c-49e0-8001-1bccaebebce8">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('CustomErrorPayloadLog', {}, 120000)]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<when
+				expression="#[!isEmpty(error.errorMessage.payload) and Mule::p('errors.externalApiErrorPayload.log') == 'true']">
+				<json-logger:logger
+					doc:name="Error Payload Logger"
+					doc:id="733ecb7d-7166-4f75-b694-8efdafa0cd88"
+					config-ref="JSON_Logger_Config"
+					message="In error-handler-before-errorTypeFlow - Error Payload"
+					tracePoint="EXCEPTION" priority="ERROR">
+					<json-logger:content><![CDATA[#[import modules::JSONLoggerModule output application/json ---
+{
+    payload: JSONLoggerModule::stringifyNonJSON(error.errorMessage.payload) 
+}]]]></json-logger:content>
+				</json-logger:logger>
+			</when>
+
+			<otherwise>
+				<json-logger:logger
+					doc:name="Debug Logger - Empty Error Payload or Error Payload Logging is Disabled"
+					doc:id="f4fef8a9-7796-4323-af52-ae840f4f11a1"
+					config-ref="JSON_Logger_Config"
+					message='#["Debug Logger -  Empty Error Payload or Error Payload Logging is Disabled"]'
+					tracePoint="EXCEPTION" priority="DEBUG">
+					<json-logger:content><![CDATA[#[" Empty Error Payload or Error Payload Logging is Disabled"]]]>
+					</json-logger:content>
+				</json-logger:logger>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="ErrorHandlerMainBeforeApplicationPayloadLogFlow"
+		doc:id="a49381aa-a105-457b-9afd-8768ea7a3722">
+		<choice doc:name="Override or Log Application Payload?"
+			doc:id="5b464344-6b8b-438c-b6c6-821e7365c678">
+			<when
+				expression="#[Mule::p('errors.override.applicationPayload') == 'true']">
+				<ee:transform
+					doc:name="Override Application Payload Logging"
+					doc:id="8775b91b-af17-4e89-b689-d9b18ef4a70b">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+Mule::lookup('CustomApplicationPayloadLog', {}, 120000)]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<when
+				expression="#[!isEmpty(payload) and Mule::p('errors.applicationPayload.log') == 'true']">
+				<json-logger:logger
+					doc:name="Application Payload Logger"
+					doc:id="4e662101-8047-4fdb-960d-dfa4beee65e5"
+					config-ref="JSON_Logger_Config"
+					message="In error-handler-before-errorTypeFlow - Application Payload"
+					tracePoint="EXCEPTION" priority="ERROR">
+				</json-logger:logger>
+			</when>
+			<otherwise>
+				<json-logger:logger
+					doc:name="Debug Logger - Empty Application Payload or Payload Logging is Disabled"
+					doc:id="52ce6683-7f7d-4e11-ae3e-aa50fc210710"
+					config-ref="JSON_Logger_Config" priority="DEBUG"
+					message='#["ebug Logger - Empty Application Payload or Application Payload Logging is Disabled"]'
+					tracePoint="EXCEPTION">
+					<json-logger:content><![CDATA[#["Empty Application Payload or Application Payload Logging is Disabled"]]]>
+					</json-logger:content>
+				</json-logger:logger>
+
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="dbFlow-BAD_SQL_SYNTAX"
+		doc:id="be2e68f1-beb1-4c15-863a-acaa7c7cd7d3">
+		<raise-error doc:name="Raise error"
+			doc:id="05b2f1fc-b566-49b5-b0b8-8ee87ad505a9"
+			type="db:BAD_SQL_SYNTAX" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="c8c1e9fd-2f79-4925-989c-0874b684006e">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="4654c065-f3f6-49b3-8b69-e87656c8e06e"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="db-CONNECTIVITY"
+		doc:id="d3c3de21-cfed-4233-b9f3-46324fb00bb2">
+		<raise-error doc:name="Raise error"
+			doc:id="3386c66f-91bb-46ad-b0fd-e543a2a6cbb3" type="DB:CONNECTIVITY" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="93f82c5f-be17-4cd0-88ae-2481afe3bb9c">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="3a1e9097-acd7-469c-b612-5ad28cfc5bd6"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="db-QUERY_EXECUTION"
+		doc:id="d37671f7-a475-473a-a002-3d4a29100f06">
+		<raise-error doc:name="Raise error"
+			doc:id="763f5316-f74d-4b90-b052-994479772b3d"
+			type="db:QUERY_EXECUTION" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="18708b70-2979-42cb-9b01-1018b056e16e">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="e7676d8f-ef19-4212-8be1-7d4911d8fe34"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="db-UNKNOWN"
+		doc:id="86249a45-92eb-4e63-9366-6a7e4aab9c33">
+		<raise-error doc:name="Raise error"
+			doc:id="275ef3c1-91fa-41f7-a343-9fe501eb98c5" type="DB:UNKNOWN" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="84c60b08-104e-425d-9dad-d59f360f01dc">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="e512947a-3b1a-43c6-a80e-3b56e2d3bc0c"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

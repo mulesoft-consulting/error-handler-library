@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+
+
+	<flow name="flow-business:invalid_response"
+		doc:id="ac453908-13bf-4b89-a9f9-399ae3b06099">
+		<raise-error
+			doc:name="Raise error BUSINESS:INVALID_RESPONSE"
+			doc:id="6c1803e4-cb51-4737-a45b-e7de95e55e72"
+			type="BUSINESS:INVALID_RESPONSE" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="fb5445e8-07af-4dcf-b49c-2d16d6adc20c">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="4dda24ac-70ad-4c99-8597-1390085c0301"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="flow-business:invalid_input_data"
+		doc:id="57effbe3-36fd-4a49-b28e-9e1fa8ffc7e1">
+		<raise-error
+			doc:name="Raise error BUSINESS:INVALID_INPUT_DATA"
+			doc:id="5f4405c4-2d97-44b0-86f0-e88fcc3164e5"
+			type="BUSINESS:INVALID_INPUT_DATA" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="274a4d36-f298-4cbc-b777-5904cf833259">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="e6c1a4df-69b3-4e17-ad5d-a8d272c76808"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="flow-business:invalid_pack_name"
+		doc:id="fc5bd067-333c-444e-8e67-16144ad39035">
+		<raise-error
+			doc:name="Raise error BUSINESS:INVALID_PACK_NAME"
+			doc:id="19638f98-4bc3-439f-89a1-0fadd7690a74"
+			type="BUSINESS:INVALID_PACK_NAME" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="5f938cf9-ab0e-42c6-97ec-bd6b5347fac1">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="fbd7274c-0cb9-4ee6-9fbe-1b622a93f09e"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="flow-business:site-reference"
+		doc:id="df821a8c-5986-475b-a28f-9c3573e41497">
+		<raise-error
+			doc:name="Raise error BUSINESS:NO_SITE_REFERENCE"
+			doc:id="507bd9ba-df4e-46c3-9870-5affc0712c15"
+			type="BUSINESS:NO_SITE_REFERENCE" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="4798bc31-38fc-479c-81c1-e80d2f98d6e5">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="2cb5fe24-1109-4349-a9c2-1851f1a0172a"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="flow-business:no_aquirer_type"
+		doc:id="2a280463-bdec-4ca5-ae37-4f01ce136630">
+		<raise-error
+			doc:name="Raise error BUSINESS:NO_ACQUIRER_TYPE"
+			doc:id="6b16fd6c-f279-4399-98df-db47d7832647"
+			type="BUSINESS:NO_ACQUIRER_TYPE" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="956653ef-1bcf-4e98-8312-0fd97819219c">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="a8a9bf66-fd85-4d38-a8fb-b1bfeab7ad9e"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="flow-business:unknown"
+		doc:id="f55e8d7a-9622-4c8f-8153-a416db8acbb2">
+		<raise-error doc:name="Raise error BUSINESS:UNKNOWN"
+			doc:id="f61c7140-d4b5-4d2d-9923-b8e0bd4910dd" type="BUSINESS:UNKNOWN" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="f0200935-8c02-409b-ae8f-975865cec53b">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="7c625061-1ef7-41c0-b53f-c0dd0c6ffa69"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

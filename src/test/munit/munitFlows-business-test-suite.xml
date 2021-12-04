@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="error-business-suite.xml" />
+	<munit:test
+		name="error-business-suite-ErrorHandlerBusinessTest-invalid-input-data"
+		doc:id="3083b33f-f49a-4d84-8ea3-8c0295ccbebc" description="Test">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="b872ab5d-b5a0-437e-b961-3b3d4c14ea98"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to flow-business:invalid_input_data"
+				doc:id="2054d6a7-f0ba-4096-a58d-eda5bb16d0cc"
+				name="flow-business:invalid_input_data" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 400"
+				doc:id="71dab734-eb5b-46aa-8550-642852aa2278"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type INVALID_INPUT_DATA"
+				doc:id="12b3b4a5-c5fc-4d95-bcab-72d59a34c4db"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;INVALID_INPUT_DATA&quot;')]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="error-business-suite-ErrorHandlerBusinessTest-invalid-response"
+		doc:id="4f27d263-af22-4a24-b139-8833708dedcf" description="Test">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+			<munit:enable-flow-source
+				value="ErrorHandlerBusiness" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="001ae155-8a99-4a55-a533-0a1fa215bc15"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to flow-business:invalid_response"
+				doc:id="17c1f427-b92a-4739-b25b-710def9ddb82"
+				name="flow-business:invalid_response" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 404"
+				doc:id="0d6ad3cc-7637-4edd-a4e2-1c01f8fd0a1d"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;404&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type INVALID_RESPONSE"
+				doc:id="9848d653-b1c5-45ba-b2f8-d25892d9f0e2"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;INVALID_RESPONSE&quot;')]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test
+		name="error-business-suite-ErrorHandlerBusinessTest-UNKNOWN"
+		doc:id="c2aad5dd-ee99-460b-8d78-3d262ed5403b" description="Test">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerBusiness" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="f51d01d7-84c8-4c65-9274-e3a7c1f38bad"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow to flow-business:unknown"
+				doc:id="214ada82-2117-4c6e-84c7-3783829f90b0"
+				name="flow-business:unknown" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 500"
+				doc:id="887b66cf-94ba-4316-84a7-88302b4711a8"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type UNKNOWN"
+				doc:id="db91b50f-8dc4-4697-9017-d2131a1634a1"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNKNOWN&quot;')]" />
+		</munit:validation>
+	</munit:test>
+
+</mule>

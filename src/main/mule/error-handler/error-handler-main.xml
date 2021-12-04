@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
+	<flow name="MainErrorHandlerFlow"
+		doc:id="d5caea74-9fd1-466e-8570-9457edde783e">
+		<flow-ref doc:name="ErrorHandlerBeforeerrorTypeFlow"
+			doc:id="057343d3-76e0-4f98-8b2f-928c5768b5c0"
+			name="ErrorHandlerBeforeerrorTypeFlow" />
+		<flow-ref doc:name="ErrorHandlerRouteerrorTypeFlow"
+			doc:id="2f402ef2-831f-4d8c-832c-7cf873595195"
+			name="ErrorHandlerRouteerrorTypeFlow" />
+		<flow-ref doc:name="ErrorHandlerAftererrorTypeFlow"
+			doc:id="998cc004-7065-4589-af3d-6f65cad3c943"
+			name="ErrorHandlerAftererrorTypeFlow" />
+	</flow>
+
+	<flow name="ErrorHandlerBeforeerrorTypeFlow"
+		doc:id="e7a9be83-985f-45b6-9d25-0d65229b7f40">
+		<flow-ref
+			doc:name="ErrorHandlerMainBeforeApplicationPayloadLogFlow"
+			doc:id="ffc2d70a-4c69-4750-9911-aa232a20e947"
+			name="ErrorHandlerMainBeforeApplicationPayloadLogFlow" />
+		<flow-ref
+			doc:name="ErrorHandlerMainBeforeErrorPayloadLogFlow"
+			doc:id="4a4bca18-74a7-4883-8c18-660d4cf2fdae"
+			name="ErrorHandlerMainBeforeErrorPayloadLogFlow" />
+		<ee:transform doc:name="Set generic variables"
+			doc:id="551223fd-5eba-41e6-bee2-03f34ddb8f9a">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="errorNamespace"><![CDATA[%dw 2.0
+output application/java
+---
+error.errorType.namespace default ""]]></ee:set-variable>
+				<ee:set-variable variableName="errorIdentifier"><![CDATA[%dw 2.0
+output application/java
+---
+error.errorType.identifier default ""]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+	</flow>
+	<flow name="ErrorHandlerRouteerrorTypeFlow"
+		doc:id="591084fa-dce5-464f-9a92-d13e86a101d2">
+		<json-logger:logger doc:name="Debug Logger"
+			doc:id="0dd16a02-8db4-4c6f-94d2-d5fa620bb84f"
+			message="In ErrorHandlerRouteerrorTypeFlow" tracePoint="EXCEPTION"
+			priority="DEBUG" config-ref="JSON_Logger_Config"/>
+		<ee:transform doc:name="Route to respective error handler based on error type" doc:id="e5ad8e71-84c8-4206-98d0-07d061d50c2d" >
+			<ee:message />
+			<ee:variables >
+				<ee:set-variable variableName="flowName" ><![CDATA[%dw 2.0
+output application/java
+var namespace = {
+				 'TECHNICAL':'ErrorHandlerTechnical',
+				 'BUSINESS':'ErrorHandlerBusiness',
+				 'HTTP':'ErrorHandlerHttp',
+				 'FILE':'ErrorHandlerFile',
+				 'JMS':'ErrorHandlerJms',
+				 'WSC':'ErrorHandlerWSC',
+				 'APIKIT':'ErrorHandlerApiKit',
+				 'REST-VALIDATOR':'ErrorHandlerRestValidator',
+				 'DB':'ErrorHandlerDB',
+				 'ANYPOINT-MQ': 'ErrorHandlerAMQ'
+				 }			 			 
+
+var errorNamespace = 
+    if (!isEmpty(error) and 
+    error.errorType? and 
+    error.errorType.namespace? and 
+    !isBlank(error.errorType.namespace))
+        error.errorType.namespace
+    else ""
+
+var errorHandlerFlow = if(namespace[errorNamespace] != null) namespace[errorNamespace] else 'ErrorHandlerDefault'
+ 
+---
+//if(!isBlank(errorHandlerFlow)) Mule::lookup(errorHandlerFlow, {},120000) else ""
+errorHandlerFlow]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Call Respective Flow" doc:id="09423693-f928-4fa4-86ed-618d4fb75564" name="#[vars.flowName]" />
+	</flow>
+
+	<flow name="ErrorHandlerAftererrorTypeFlow"
+		doc:id="6cc20431-c48a-483e-838c-edcd8b980aa5">
+		<json-logger:logger doc:name="Debug Logger"
+			doc:id="40c021ad-53b6-42e4-a68f-e389f0ef742b"
+			message="In error-handler-after-errorTypeFlow" tracePoint="EXCEPTION"
+			priority="DEBUG" config-ref="JSON_Logger_Config"/>
+		<flow-ref doc:name="ErrorHandlerAfterErrorProcessingFlow"
+			doc:id="142372a9-b58d-4579-bd14-81ba72ba3784"
+			name="ErrorHandlerAfterErrorProcessingFlow" />
+	</flow>
+</mule>

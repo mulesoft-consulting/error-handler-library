@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="mUnitFlows-wscFlow"
+		doc:id="593eae30-d2be-41d5-8441-b1a806940a81">
+		<raise-error doc:name="Raise error"
+			doc:id="846e40d7-be2d-4f86-be18-489b11ab4b7f" type="wsc:UNKNOWN" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="ed50ffd6-bbb5-4dee-a5c4-03a4ba9a60c3">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="a90c5030-a4db-4f07-9327-695745e22ad2"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="technical-CORRELATION_ID_REQUIRED"
+		doc:id="d37671f7-a475-473a-a002-3d4a29100f06">
+		<raise-error
+			doc:name="Raise error technical:CORRELATION_ID_REQUIRED"
+			doc:id="763f5316-f74d-4b90-b052-994479772b3d"
+			type="technical:CORRELATION_ID_REQUIRED" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="18708b70-2979-42cb-9b01-1018b056e16e">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="40756f92-1ddb-42aa-9355-32c22ded08a1"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="technical-UNKNOWN"
+		doc:id="86249a45-92eb-4e63-9366-6a7e4aab9c33">
+		<raise-error doc:name="Raise error technical:UNKNOWN"
+			doc:id="275ef3c1-91fa-41f7-a343-9fe501eb98c5"
+			type="technical:UNKNOWN" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="84c60b08-104e-425d-9dad-d59f360f01dc">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="30869fca-f7ef-4009-ab59-522b1a3752a1"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="file-UNKNOWN"
+		doc:id="c08341c3-84b1-4ba9-ad72-97ef387ec7cf">
+		<raise-error doc:name="Raise error file:UNKNOWN"
+			doc:id="d1246b2c-db3d-48a4-b47d-49590e44d4ff" type="file:UNKNOWN" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="0ef362a9-4de0-4752-8801-d0fa8f589916">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="e56996a6-427d-4a90-ada6-b478ef096daf"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="Flow-error-UNKNOWN-UNKNOWN"
+		doc:id="c46f64a1-ee5e-460b-adcb-c904d7543ceb">
+		<raise-error doc:name="Raise error UNKNOWN:UNKNOWN"
+			doc:id="9c32d2e9-56cb-4ecd-b038-6d4c5ab4b9b3" type="UNKNOWN:UNKNOWN" />
+		<error-handler>
+			<on-error-continue enableNotifications="true"
+				logException="true" doc:name="On Error Continue"
+				doc:id="6a8e19f4-df83-4ec3-9b35-74d319c393c9">
+				<flow-ref doc:name="MainErrorHandlerFlow"
+					doc:id="91278255-c9e3-4d00-84ac-1acd8ca2c0f3"
+					name="MainErrorHandlerFlow" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>

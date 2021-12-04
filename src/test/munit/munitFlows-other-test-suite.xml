@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="error-other_suite.xml" />
+	<munit:test name="error-wsc-suite-default"
+		doc:id="0583ddab-2199-4d8c-a4b0-bd1f637b80d7" description="Test ANY">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerWSC" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="0a8680b0-5cfb-4883-9115-62746dde79c5"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to wscFlow-UNKNOWN"
+				doc:id="1149abd5-7097-4b19-b95f-40dfbbcfc5fd"
+				name="mUnitFlows-wscFlow" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 500"
+				doc:id="220d22a7-20f3-4bd7-a008-56d52c216c25"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type UNKNOWN"
+				doc:id="2b833002-07ae-4d33-87ef-febe9899edfb"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNKNOWN&quot;')]" />
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="error-jmsTest-any"
+		doc:id="66470b34-d7e0-4c85-87cb-b14806157335" description="Test ANY" ignore="true">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="c6dc4a62-729c-423f-9ab8-a926c51d57ee"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to munitFlows-JMSFlow"
+				doc:id="26215214-2c51-4563-98d4-88aac818bbb9" name="ErrorHandlerJMS" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that httpStatus 500"
+				doc:id="2b9e6a67-37b0-49a2-a80d-09801dc91f46"
+				is="#[MunitTools::containsString('&quot;httpStatus&quot;: &quot;500&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="error-technical-CORRELATION_ID_REQUIRED"
+		doc:id="4171ab92-2370-404b-8a6b-e69b7605d85d"
+		description="Test CORRELATION_ID_REQUIRED">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+			<munit:enable-flow-source
+				value="ErrorHandlerTechnical" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="46c64c9b-eae2-4ceb-ae1d-96424b07f890"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref
+				doc:name="Flow-ref to technical-CORRELATION_ID_REQUIRED"
+				doc:id="d7d0ab82-9256-4310-8d0f-ab84f11cc63c"
+				name="technical-CORRELATION_ID_REQUIRED" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 400"
+				doc:id="c8b40f5e-e75f-4264-8b68-129c0cbd16e6"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;400&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type CORRELATION_ID_REQUIRED"
+				doc:id="98163f35-847a-4214-b234-462188917de0"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;CORRELATION_ID_REQUIRED&quot;')]" />
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="error-technical-ANY"
+		doc:id="5e506808-ef79-4f0c-997a-f622cb393a4e"
+		description="Test UNKNOWN">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+			<munit:enable-flow-source
+				value="ErrorHandlerTechnical" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="db0f823a-e192-455d-969a-12d49109c0cb"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to technicalFlow-UNKNOWN"
+				doc:id="77b14efa-12e6-41e1-bd04-e8e5229967e7"
+				name="technical-UNKNOWN" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 500"
+				doc:id="a1ba3c88-e6e1-4bf2-85e5-6881da313ece"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type UNKNOWN"
+				doc:id="b522ca02-785c-4233-856d-9c39ca24a6e4"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNKNOWN&quot;')]" />
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="error-file-ANY"
+		doc:id="c96107bb-529e-41d3-829a-4decaf81c1c4"
+		description="Test UNKNOWN">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerFile" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="1de2450a-dbab-49de-8a42-2f392388db40"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to file-UNKNOWN"
+				doc:id="42a68a1c-b98c-48fb-8952-b26d2eb33418" name="file-UNKNOWN" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 500"
+				doc:id="2f8bd48a-d1b5-4021-9c50-0801ffd14ec9"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type UNKNOWN"
+				doc:id="4ea826e9-68f7-442e-b07c-31506aa4ca22"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNKNOWN&quot;')]" />
+		</munit:validation>
+	</munit:test>
+
+	<munit:test name="error-xxx-ANY"
+		doc:id="8272ba6e-9184-4501-8f5b-6da0c13e1e0f"
+		description="Test UNKNOWN">
+		<munit:enable-flow-sources>
+			<munit:enable-flow-source
+				value="ErrorHandlerDefault" />
+		</munit:enable-flow-sources>
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when"
+				doc:id="e3931e8f-c591-437b-9df5-c4bbf790aa35"
+				processor="json-logger:logger">
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<flow-ref doc:name="Flow-ref to xxx-UNKNOWN"
+				doc:id="3ee7ba38-39fa-46dc-b0d3-ca333462608e"
+				name="Flow-error-UNKNOWN-UNKNOWN" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that
+				doc:name="Assert that errorCode 500"
+				doc:id="26fbcbdf-c255-4398-9f69-d10ff1ff17e1"
+				is="#[MunitTools::containsString('&quot;errorCode&quot;: &quot;500&quot;')]"
+				expression="#[output application/java ---write(payload, 'application/json') as String]" />
+			<munit-tools:assert-that
+				doc:name="Assert That - Payload Error Type UNKNOWN"
+				doc:id="10e60283-efc4-4c20-ad91-b6aa8c545dfb"
+				message="The response payload is not correct!"
+				expression="#[output application/java ---write(payload, 'application/json') as String]"
+				is="#[MunitTools::containsString('&quot;errorType&quot;: &quot;UNKNOWN&quot;')]" />
+		</munit:validation>
+	</munit:test>
+</mule>

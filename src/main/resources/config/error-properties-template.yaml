@@ -10,6 +10,8 @@ errors:
     db: "false"
     restvalidator: "false"
     response: "false"
+    applicationPayload: "false"
+    errorPayload: "false"
     default: "false"
   extend:
     technical: "false"
@@ -26,7 +28,7 @@ errors:
     business:
       INVALID_INPUT_DATA: "{\"errorMessage\": \"Input data is invalid\",\"httpStatus\" : \"400\"}"
       INVALID_RESPONSE: "{\"errorMessage\": \"Response from target system is invalid\",\"httpStatus\" : \"404\"}"
-      INVALID_PACK_NAME: "{\"errorMessage\": \"Response from target system is invalid\",\"httpStatus\" : \"404\"}"
+      INVALID_OPERATION: "{\"errorMessage\": \"The operation requested is unavailable\",\"httpStatus\" : \"404\"}"
       DEFAULT: "{\"errorMessage\": \"An error has occured\",\"httpStatus\" : \"500\"}"
     apikit:
       BAD_REQUEST: "{\"errorMessage\": \"A Bad Request Error has occurred\",\"httpStatus\" : \"400\"}"
@@ -53,12 +55,29 @@ errors:
       RESOURCE_NOT_FOUND: "{\"errorMessage\": \"Resource not found\",\"httpStatus\" : \"404\"}"
       DEFAULT: "{\"errorMessage\": \"An error has occured\",\"httpStatus\" : \"500\"}"
     db:
+      BAD_SQL_SYNTAX: "{\"errorMessage\": \"SQL Syntax Error has occurred\",\"httpStatus\" : \"400\"}"
+      CONNECTIVITY: "{\"errorMessage\": \"A Connection Error has occurred\",\"httpStatus\" : \"504\"}"
+      QUERY_EXECUTION: "{\"errorMessage\": \"Query Execution Error has occurred\",\"httpStatus\" : \"400\"}"    
       DEFAULT: "{\"errorMessage\": \"An error has occured\",\"httpStatus\" : \"500\"}"
+    anypoint-mq:
+      ACKING: "{\"errorMessage\": \"AMQ message acknowledgment fails\",\"httpStatus\" : \"400\"}"
+      CONSUMING: "{\"errorMessage\": \"AMQ No message to consume\",\"httpStatus\" : \"400\"}"
+      CONNECTIVITY: "{\"errorMessage\": \"AMQ connectivity error has occurred\",\"httpStatus\" : \"504\"}"
+      TIMEOUT: "{\"errorMessage\": \"AMQ timeout error has occurred\",\"httpStatus\" : \"408\"}"
+      DESTINATION_NOT_FOUND: "{\"errorMessage\": \"AMQ destination not found\",\"httpStatus\" : \"404\"}"
+      RETRY_EXHAUSTED: "{\"errorMessage\": \"AMQ retry exhausted\",\"httpStatus\" : \"504\"}"
+      PUBLISHING: "{\"errorMessage\": \"AMQ Publishing Error has occurred\",\"httpStatus\" : \"400\"}"
+      ILLEGAL_BODY:  "{\"errorMessage\": \"AMQ Illegal-body Error has occurred\",\"httpStatus\" : \"400\"}"
+      UNKNOWN: "{\"errorMessage\": \"AMQ Unknown Error has occurred\",\"httpStatus\" : \"400\"}"
+      RESOURCE_NOT_FOUND: "{\"errorMessage\": \"AMQ resource not found\",\"httpStatus\" : \"404\"}"
+      DEFAULT: "{\"errorMessage\": \"An AMQ error has occurred\",\"httpStatus\" : \"500\"}"        
     wsc:
       DEFAULT: "{\"errorMessage\": \"An error has occured\",\"httpStatus\" : \"500\"}"
     jms:
       DEFAULT: "{\"errorMessage\": \"An error has occured\",\"httpStatus\" : \"500\"}"
     technical:
+      CORRELATION_ID_REQUIRED: "{\"errorMessage\": \"The required header 'x-correlation-id' was not provided\",\"httpStatus\" : \"400\"}"
+      INVALID_DATA: "{\"errorMessage\": \"Invalid data while processing]\",\"httpStatus\" : \"400\"}"
       DEFAULT: "{\"errorMessage\": \"An error has occured\",\"httpStatus\" : \"500\"}"
     file:
       DEFAULT: "{\"errorMessage\": \"An error has occured\",\"httpStatus\" : \"500\"}"
