@@ -7,7 +7,7 @@
 	<!-- TODO: Please Add appropriate ${project.groupId} -->
 	<groupId>9603fc66-9985-4754-8a84-6dfcfc3b2d72</groupId>
 	<artifactId>error-handler-library</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<packaging>mule-application</packaging>
 
 	<name>error-handler-library</name>
