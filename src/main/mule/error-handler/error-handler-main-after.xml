@@ -13,7 +13,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<choice doc:name="Propagate error?"
 			doc:id="0df13125-e7cc-428c-9ad8-1e206113f1e0">
 			<when
-				expression='#[(error.errorMessage.attributes.Headers."content-type" contains ("application/json")) and (error.errorMessage.payload.errorCode != null)]'>
+				expression='#[(error.errorMessage.payload.errorCode? ) and (error.errorMessage.attributes.Headers."content-type" contains ("application/json"))]'>
 				<choice doc:name="Choice"
 					doc:id="3d204aac-2996-4470-8d89-fb93bb07a22e">
 					<when

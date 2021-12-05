@@ -29,7 +29,7 @@ Mule::lookup('CustomHttpErrorHandler', {}, 120000)]]></ee:set-payload>
 				</ee:transform>
 			</when>
 			<when
-				expression='#[(error.errorMessage.attributes.Headers."content-type" contains ("application/json")) and (error.errorMessage.payload.errorCode != null)]'>
+				expression='#[(error.errorMessage.payload.errorCode? ) and (error.errorMessage.attributes.Headers."content-type" contains ("application/json"))]'>
 				<json-logger:logger doc:name="Debug Logger"
 					doc:id="09def951-0eb7-441a-aa7f-94834c054e9b"
 					message="Propagating Error" tracePoint="EXCEPTION" priority="DEBUG"
