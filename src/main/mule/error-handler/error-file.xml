@@ -17,7 +17,7 @@ http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/m
 			tracePoint="EXCEPTION" priority="DEBUG" />
 		<choice doc:name="Override File Error Handler?"
 			doc:id="c90bec94-5207-4840-b387-ee22763f8fb7">
-			<when expression="#[Mule::p('errors.override.db') == 'true']">
+			<when expression="#[Mule::p('errors.override.file') == 'true']">
 				<ee:transform doc:name="Call custom File error handler"
 					doc:id="c20c4675-2526-485f-baf9-913d04478260">
 					<ee:message>

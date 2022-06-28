@@ -18,7 +18,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 		<raise-error doc:name="Raise error" doc:id="8999b74c-826e-415d-9471-51c2ce1e4b6b" type="BUSINESS:INVALID_RESPONSE"/>
 		<error-handler >
 			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="bbead0f3-5cd7-4ae8-8444-2ef2443e04bf" >
-				<flow-ref doc:name="Flow Reference" doc:id="06895105-0001-43d1-b95d-dd2f4d256186" name="MainErrorHandlerFlow" />
+				<flow-ref doc:name="MainErrorHandlerFlow" doc:id="06895105-0001-43d1-b95d-dd2f4d256186" name="MainErrorHandlerFlow" />
 			</on-error-propagate>
 		</error-handler>
 	</flow>
