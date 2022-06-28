@@ -14,7 +14,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	<json-logger:config name="JSON_Logger_Config"
 		doc:name="JSON Logger Config"
 		doc:id="dce55f21-cff1-44b6-b858-3b8212a81817" environment="env"
-		applicationName='#[(vars.appName as String default "")]' applicationVersion="1.0.0" logLocationInfo="false"/>
+		applicationName='#[(vars.appName as String default "EHL")]' applicationVersion="1.0.0" logLocationInfo="false"/>
 
 	<http:listener-config name="HTTP_Listener_config"
 		doc:name="HTTP Listener config"
